@@ -1,7 +1,7 @@
 #!/bin/bash
 
-docker_dir=/home/shubham/server_data/docker
-containers=(authelia bitwarden_rs caddy diun minio mysql outline pihole planka portainer postgres postwoman redis site_hibare traefik wireguard)
+docker_dir=/path/to/container/directory/
+containers=(authelia bitwarden_rs) # Is a list of directories under above path having docker-compose.yml file
 
 echo "Docker directory: ${docker_dir}"
 echo "Containers: ${#containers[*]}"
