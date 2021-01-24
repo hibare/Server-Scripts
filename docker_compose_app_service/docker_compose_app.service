@@ -1,0 +1,15 @@
+# /etc/systemd/system/docker-compose-app.service
+
+[Unit]
+Description=Docker Compose Application Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash /home/shubham/server_data/scripts/docker_compose_app_service/docker_compose_app_starter.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
