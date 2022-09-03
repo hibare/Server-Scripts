@@ -18,7 +18,7 @@ fi
 if [ ! -z "$message"  ]
 then
     curl --request POST \
-        --url https://discord.com/api/webhooks/866714081385119835/MqgvnL4NQnElpU8Nt9BRJRbnggDZs3o-aaM0A5_DNZKc3NilsmNvYBLrjPh27J3ithpu \
+        --url <DISCORD_WEBHOOK> \
         --header 'Content-Type: application/json' \
         --cookie '__dcfduid=02a5cd2e1b2f11ed8765468f320d6606; __sdcfduid=02a5cd2e1b2f11ed8765468f320d6606797678dd30562f3264189e08596be9d00b508cd40758e24373b2e5709368bb99; __cfruid=00e54275ec73526a836ce2134b7f86f109a360ec-1661773699' \
         --data '{

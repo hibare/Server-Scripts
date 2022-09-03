@@ -5,7 +5,7 @@ if [ -n "$SSH_CLIENT" ]; then
     HOST="$(hostname -f)"
     IP="$(echo $SSH_CLIENT|awk '{print $1}')"
     curl --request POST \
-    --url https://discord.com/api/webhooks/1008066755245125712/lleYaU0-2BR-NU29giWqEaRVja1KZGsIc3lpm969az4iwHvmjvWSltjeMsRvu3f49dWA \
+    --url <DISCORD_WEBHOOK> \
     --header 'Content-Type: application/json' \
     --cookie '__dcfduid=02a5cd2e1b2f11ed8765468f320d6606; __sdcfduid=02a5cd2e1b2f11ed8765468f320d6606797678dd30562f3264189e08596be9d00b508cd40758e24373b2e5709368bb99; __cfruid=3f8ffd757b569362eeffda5d533230c19d983406-1660412424' \
     --data '{
