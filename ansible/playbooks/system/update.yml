@@ -1,0 +1,29 @@
+---
+- name: Update packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ping test
+      ping:
+
+    - name: Run the equivalent of "apt-get update"
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+    
+    - name: Update all packages to their latest version
+      apt:
+        name: "*"
+        state: latest
+
+    - name: Upgrade apt packages
+      apt: 
+        upgrade: dist
+    
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
