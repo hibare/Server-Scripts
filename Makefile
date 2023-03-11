@@ -41,6 +41,13 @@ ansible-system-reboot:
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/reboot.yml -i inventory.ini
+
+ansible-system-set-ist-timezone:
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	cd  ansible; \
+	ansible-playbook playbooks/system/set-ist-timezone.yml -i inventory.ini
 	
-.PHONY = ansible-local-setup ansible-system-update
+.PHONY = ansible-local-setup ansible-system-update ansible-system-set-ist-timezone
 
