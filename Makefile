@@ -9,7 +9,10 @@ YELLOW=\033[0;33m
 BLUE=\033[0;34m
 NC=\033[0m
 
-ansible-local-setup:
+.DEFAULT_GOAL := help
+.PHONY = ansible-local-setup ansible-system-update ansible-system-set-ist-timezone help
+
+ansible-local-setup: ## Ansible Local Setup 
 	@echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n"
 	@sudo apt install sshpass -y
 	@echo -e "\n$(BLUE) [!] Installing python3-venv...$(NC) \n"
@@ -28,26 +31,28 @@ ansible-local-setup:
 	ansible-galaxy collection install -r ansible/requirements.yml;
 
 
-ansible-system-update:
+ansible-system-update: ## Ansible System Update
 	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
 	@source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/update.yml -i inventory.ini
 
-ansible-system-reboot:
+ansible-system-reboot: ## Ansible System Reboot
 	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
 	@source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/reboot.yml -i inventory.ini
 
-ansible-system-set-ist-timezone:
+ansible-system-set-ist-timezone: ## Ansible Set IST Timezone
 	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
 	@source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/set-ist-timezone.yml -i inventory.ini
 	
-.PHONY = ansible-local-setup ansible-system-update ansible-system-set-ist-timezone
-
+help: ## Help
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1\3/p' \
+	| column -t  -s ' '
