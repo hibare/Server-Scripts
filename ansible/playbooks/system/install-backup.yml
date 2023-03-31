@@ -5,8 +5,11 @@
     - name: Ping test
       ping:
 
-    - name: Download and import the Hibare GPG key
-      shell: curl -fsSL https://apt.hibare.in/gpg.key | sudo gpg --dearmour -o /usr/share/keyrings/hibare-keyring.gpg
+    - name: Download and import the Hibare repository
+      apt_key:
+        url: https://apt.hibare.in/gpg.key
+        keyring: /usr/share/keyrings/hibare-keyring.gpg
+        state: present
 
     - name: Add Hibare repository source file to Ubuntu's sources list
       copy:
