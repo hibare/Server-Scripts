@@ -1,0 +1,38 @@
+- name: Install GoS3Backup
+  hosts: all
+  become: true
+  tasks:
+    - name: Download and import the Hibare GPG key
+      shell: curl -fsSL https://apt.hibare.in/gpg.key | sudo gpg --dearmour -o /usr/share/keyrings/hibare-keyring.gpg
+
+    - name: Add Hibare repository source file to Ubuntu's sources list
+      copy:
+        dest: /etc/apt/sources.list.d/hibare.list
+        content: "deb [signed-by=/usr/share/keyrings/hibare-keyring.gpg] https://apt.hibare.in/ * *"
+
+    - name: Update Ubuntu's package list
+      apt:
+        update_cache: yes
+
+    - name: Install GoS3Backup
+      apt:
+        name: gos3backup
+        state: present
+
+    - name: Copy local file to /etc/gos3backup
+      copy:
+        src: config/gos3backup-config.yaml
+        dest: /etc/gos3backup/config.yaml
+
+    - name: Restart GoS3Backup service
+      service:
+        name: gos3backup
+        state: restarted
+
+    - name: Check if GoS3Backup service is enabled
+      systemd:
+        name: gos3backup
+        state: started
+        enabled: yes
+      register: gos3backup_service
+
