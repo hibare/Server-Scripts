@@ -2,6 +2,9 @@
   hosts: all
   become: true
   tasks:
+    - name: Ping test
+      ping:
+
     - name: Download and import the Hibare GPG key
       shell: curl -fsSL https://apt.hibare.in/gpg.key | sudo gpg --dearmour -o /usr/share/keyrings/hibare-keyring.gpg
 
