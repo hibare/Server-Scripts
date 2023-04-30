@@ -58,6 +58,13 @@ ansible-system-install-backup: ## Ansible System Install Backup
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/install-backup.yml -i inventory.ini
+
+ansible-system-install-ssh-login-notifier: ## Ansible System Install SSH Login Notifier
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	cd  ansible; \
+	ansible-playbook playbooks/system/ssh-login-alert.yml -i inventory.ini
 	
 help: ## Help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

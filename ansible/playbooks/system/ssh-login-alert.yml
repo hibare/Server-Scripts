@@ -1,0 +1,21 @@
+---
+- name: Copy SSH login notifier
+  hosts: all
+  become: yes
+
+  vars:
+    script_src: config/ssh_login_alert.sh
+    script_dest: /etc/profile.d
+
+  tasks:
+    - name: Check if the script is present
+      stat:
+        path: "{{ script_dest }}/ssh_login_alert.sh"
+      register: script_stat
+
+    - name: Copy the script if not present or updated
+      copy:
+        src: "{{ script_src }}"
+        dest: "{{ script_dest }}"
+        mode: '0755'
+      when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int
