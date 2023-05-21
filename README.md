@@ -1,3 +1,3 @@
-# Rapler Scripts
+# Server Scripts
 
-Helper scripts to manage & maintain a server & its applications
+Ansible playbooks & other scripts to manage servers & applications.
