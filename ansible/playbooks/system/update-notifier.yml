@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    script_src: config/update_notifier.sh
+    script_url: https://raw.githubusercontent.com/hibare/Server-Scripts/master/scripts/update-notifier/update_notifier.sh
     script_dest: /home/shubham/scripts
     cron_minute: "30"
     cron_hour: "23"
@@ -21,9 +21,9 @@
         path: "{{ script_dest }}/update_notifier.sh"
       register: script_stat
 
-    - name: Copy the script if not present or updated
-      copy:
-        src: "{{ script_src }}"
+    - name: Load script if not present or updated
+      get_url:
+        url: "{{ script_url }}"
         dest: "{{ script_dest }}"
         mode: '0755'
       when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int

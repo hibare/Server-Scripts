@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    script_src: config/ssh_login_alert.sh
+    script_url: https://raw.githubusercontent.com/hibare/Server-Scripts/master/scripts/ssh-login-alert/ssh_login_alert.sh
     script_dest: /etc/profile.d
 
   tasks:
@@ -13,9 +13,9 @@
         path: "{{ script_dest }}/ssh_login_alert.sh"
       register: script_stat
 
-    - name: Copy the script if not present or updated
-      copy:
-        src: "{{ script_src }}"
+    - name: Load script if not present or updated
+      get_url:
+        url: "{{ script_url }}"
         dest: "{{ script_dest }}"
         mode: '0755'
       when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int
