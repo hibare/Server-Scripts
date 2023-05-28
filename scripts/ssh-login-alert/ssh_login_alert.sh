@@ -5,7 +5,7 @@ if [ -n "$SSH_CLIENT" ]; then
     HOST="$(hostname -f)"
     IP="$(echo $SSH_CLIENT|awk '{print $1}')"
     curl --request POST \
-    --url <DISCORD_WEBHOOK> \
+    --url ${DISCORD_WEBHOOK_SSH_LOGIN} \
     --header 'Content-Type: application/json' \
     --data '{
     "username": "Server Notifications",
