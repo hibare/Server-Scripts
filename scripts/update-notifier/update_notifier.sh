@@ -27,7 +27,7 @@ then
     message="${message}\n\nThe following packages need to be updated:${joined_packages}"
     
     curl --request POST \
-        --url <DISCORD_WEBHOOK> \
+        --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \
         --header 'Content-Type: application/json' \
         --data '{
         "username": "Server Notifications",
