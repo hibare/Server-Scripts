@@ -17,6 +17,15 @@ fi
 
 if [ ! -z "$message"  ]
 then
+    packages="$(/usr/lib/update-notifier/apt-check --package-names 2>&1)"
+    joined_packages=""
+
+    while IFS= read -r line; do
+        joined_packages+="\n$line"
+    done <<< "$packages"
+
+    message="${message}\n\nThe following packages need to be updated:${joined_packages}"
+    
     curl --request POST \
         --url <DISCORD_WEBHOOK> \
         --header 'Content-Type: application/json' \
