@@ -72,6 +72,13 @@ ansible-system-install-update-notifier: ## Ansible System Install Update Notifie
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
 	ansible-playbook playbooks/system/update-notifier.yml -i inventory.ini
+
+ansible-system-push-env-vars: ## Ansible System push env vars
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	cd  ansible; \
+	ansible-playbook playbooks/system/push-env-vars.yml -i inventory.ini
 	
 help: ## Help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

@@ -1,0 +1,24 @@
+---
+- name: Push environment variables
+  hosts: all
+  become: yes
+
+  vars:
+    env_file: "config/server.env"
+
+  tasks:
+    - name: Read local file
+      ansible.builtin.set_fact:
+        env_file_contents: "{{ lookup('file', env_file) }}"
+
+    - name: Decode .env file contents
+      set_fact:
+        decoded_env_content: "{{ env_file_contents | b64decode }}"
+      changed_when: false 
+
+    - name: Update server environment
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        line: "{{ item.split('=')[0] }}={{ item.split('=')[1] }}"
+        state: present
+      loop: "{{ decoded_env_content.split('\n') }}"
