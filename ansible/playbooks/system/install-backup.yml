@@ -2,9 +2,6 @@
   hosts: all
   become: true
   tasks:
-    - name: Ping test
-      ping:
-
     - name: Download and import the Hibare repository
       apt_key:
         url: https://apt.hibare.in/gpg.key

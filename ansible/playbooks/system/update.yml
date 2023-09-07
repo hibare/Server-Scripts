@@ -3,9 +3,6 @@
   hosts: all
   become: yes
   tasks:
-    - name: Ping test
-      ping:
-
     - name: Run the equivalent of "apt-get update"
       apt:
         update_cache: true
