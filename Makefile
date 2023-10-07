@@ -54,6 +54,14 @@ ansible-system-update: ## Ansible System Update
 	cd  ansible; \
 	ansible-playbook playbooks/system/update.yml -i inventory.ini
 
+.PHONY: ansible-ssytem-reboot-notifier
+ansible-system-reboot-notifier: ## Ansible System Reboot Notifier
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	cd  ansible; \
+	ansible-playbook playbooks/system/reboot-notifier.yml -i inventory.ini
+	
 .PHONY: ansible-system-reboot
 ansible-system-reboot: ## Ansible System Reboot
 	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";

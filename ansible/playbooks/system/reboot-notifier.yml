@@ -1,0 +1,38 @@
+---
+- name: Setup reboot notifier
+  hosts: all
+  become: yes
+
+  vars:
+    script_url: https://raw.githubusercontent.com/hibare/Server-Scripts/master/scripts/reboot-notifier/reboot_notifier.sh
+    script_dest: /home/shubham/scripts
+    cron_minute: "30"
+    cron_hour: "23"
+    cron_job: "bash {{ script_dest }}/reboot_notifier.sh"
+
+  tasks:
+    - name: Ensure the destination directory exists
+      file:
+        path: "{{ script_dest }}"
+        state: directory
+
+    - name: Check if the script is present
+      stat:
+        path: "{{ script_dest }}/reboot_notifier.sh"
+      register: script_stat
+
+    - name: Load script if not present or updated
+      get_url:
+        url: "{{ script_url }}"
+        dest: "{{ script_dest }}"
+        mode: '0755'
+      when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int
+
+    - name: Add a cronjob to run the script
+      cron:
+        name: "Run the script every day"
+        minute: "{{ cron_minute }}"
+        hour: "{{ cron_hour }}"
+        job: "{{ cron_job }}"
+        user: "root"
+        state: present
