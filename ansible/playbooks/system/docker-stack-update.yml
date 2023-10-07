@@ -1,0 +1,33 @@
+---
+- name: Update Docker Stacks on Remote Hosts
+  hosts: all
+
+  vars:
+    script_url: ../../../scripts/docker-stack-update/docker_stack_update.sh
+    script_dest: /tmp/docker_stack_update.sh
+
+  tasks:
+    - name: Copy script to remote hosts
+      copy:
+        src: "{{ script_url }}"
+        dest: "{{ script_dest }}"
+        mode: '0755'
+
+    - name: Run the script asynchronously
+      async: 600  # Set the timeout in seconds (adjust as needed)
+      poll: 0     # Don't wait for completion
+      shell: "{{ script_dest }}"
+      delegate_to: "{{ inventory_hostname }}"
+      register: script_result
+
+    - name: Wait for the script to complete
+      async_status:
+        jid: "{{ script_result.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 60  # Adjust the number of retries as needed
+      delay: 10    # Adjust the delay between retries as needed
+
+    - name: Display the script output
+      debug:
+        var: job_result.stdout_lines
