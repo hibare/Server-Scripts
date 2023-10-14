@@ -118,6 +118,14 @@ ansible-system-docker-stack-update: ## Ansible System Docker Stack Update
 	cd  ansible; \
 	ansible-playbook playbooks/system/docker-stack-update.yml -i inventory.ini
 
+.PHONY: ansible-system-docker-prune
+ansible-system-docker-prune: ## Ansible System Docker Prune
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	cd  ansible; \
+	ansible-playbook playbooks/system/docker-prune.yml -i inventory.ini
+	
 .PHONY: help	
 help: ## Disply this help
 		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-45s$(NC)%s\n", $$1, $$2}'

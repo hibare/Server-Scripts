@@ -1,0 +1,7 @@
+---
+- name: Prune Docker System
+  hosts: all
+ 
+  tasks:
+    - name: Run Docker System Prune
+      command: docker system prune --all -f
