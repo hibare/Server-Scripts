@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    script_url: https://raw.githubusercontent.com/hibare/Server-Scripts/master/scripts/ssh-login-alert/ssh_login_alert.sh
+    script_url: '{{ lookup("env", "SSH_LOGIN_ALERT_SCRIPT_SOURCE") }}'
     script_dest: /etc/profile.d
 
   tasks:

@@ -75,9 +75,9 @@ ansible-system-reboot-notifier: ## Ansible System Reboot Notifier
 ansible-system-reboot: ## Ansible System Reboot
 	$(call run_ansible_playbook, playbooks/system/reboot.yml)
 
-.PHONY: ansible-system-set-ist-timezone
-ansible-system-set-ist-timezone: ## Ansible Set IST Timezone
-	$(call run_ansible_playbook, playbooks/system/set-ist-timezone.yml)
+.PHONY: ansible-system-set-timezone
+ansible-system-set-timezone: ## Ansible Set IST Timezone
+	$(call run_ansible_playbook, playbooks/system/set-timezone.yml)
 
 .PHONY: ansible-system-install-backup
 ansible-system-install-backup: ## Ansible System Install Backup

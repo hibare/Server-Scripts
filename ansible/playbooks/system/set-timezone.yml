@@ -1,0 +1,12 @@
+---
+- name: Set timezone
+  hosts: all
+  become: true
+
+  vars:
+    timezone: '{{ lookup("env", "TIMEZONE") }}'
+  
+  tasks:
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone }}"

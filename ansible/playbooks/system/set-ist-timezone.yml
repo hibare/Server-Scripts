@@ -1,8 +1,0 @@
----
-- name: Set Asia/Kolkata timezone
-  hosts: all
-  become: true
-  tasks:
-    - name: Set timezone to Asia/Kolkata
-      timezone:
-        name: Asia/Kolkata

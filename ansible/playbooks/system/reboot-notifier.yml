@@ -4,8 +4,8 @@
   become: yes
 
   vars:
-    script_url: https://raw.githubusercontent.com/hibare/Server-Scripts/master/scripts/reboot-notifier/reboot_notifier.sh
-    script_dest: /home/shubham/scripts
+    script_url: '{{ lookup("env", "REBOOT_NOTIFIER_SCRIPT_SOURCE") }}'
+    script_dest: '{{ lookup("env", "SCRIPTS_DESTINATION") }}'
     cron_minute: "30"
     cron_hour: "23"
     cron_job: "bash {{ script_dest }}/reboot_notifier.sh"
