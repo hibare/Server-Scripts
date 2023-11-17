@@ -55,6 +55,9 @@ define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
 	source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
+	set -o allexport; \
+	source ".env"; \
+	set +o allexport; \
 	cd  ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
 	ansible-playbook $(1) -i $(INVENTORY_FILE);
@@ -99,7 +102,27 @@ ansible-system-docker-stack-update: ## Ansible System Docker Stack Update
 .PHONY: ansible-system-docker-prune
 ansible-system-docker-prune: ## Ansible System Docker Prune
 	$(call run_ansible_playbook, playbooks/system/docker-prune.yml)
-	
-.PHONY: help	
+
+.PHONY: ansible-system-new-user
+ansible-system-new-user: ## Ansible System New User
+	$(call run_ansible_playbook, playbooks/system/new-user.yml)
+
+.PHONY: ansible-system-install-docker
+ansible-system-install-docker: ## Ansible System Install Docker
+	$(call run_ansible_playbook, playbooks/system/install-docker.yml)
+
+.PHONY: ansible-system-install-tailscale
+ansible-system-install-tailscale: ## Ansible System Install Tailscale
+	$(call run_ansible_playbook, playbooks/system/install-tailscale.yml)
+
+.PHONY: ansible-system-join-docker-swarm
+ansible-system-join-docker-swarm: ## Ansible System Join Docker Swarm
+	$(call run_ansible_playbook, playbooks/system/join-docker-swarm.yml)
+
+.PHONY: ansible-system-setup-ufw
+ansible-system-setup-ufw: ## Ansible System Setup UFW
+	$(call run_ansible_playbook, playbooks/system/setup-ufw.yml)
+
+.PHONY: help
 help: ## Disply this help
 		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-45s$(NC)%s\n", $$1, $$2}'

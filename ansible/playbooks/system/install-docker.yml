@@ -1,0 +1,23 @@
+- name: Install Docker
+  hosts: all
+  become: true
+  
+  tasks:
+    - name: Download Docker convenience script
+      get_url:
+        url: https://get.docker.com
+        dest: /tmp/get-docker.sh
+
+    - name: Run Docker convenience script
+      command: sh /tmp/get-docker.sh
+
+    - name: Add current user to the Docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Restart Docker service
+      service:
+        name: docker
+        state: restarted

@@ -1,0 +1,23 @@
+---
+- name: Configure UFW and Allow OpenSSH
+  hosts: all
+  become: true 
+
+  tasks:
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+    - name: Allow OpenSSH
+      ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: Reload UFW
+      ufw:
+        state: reloaded

@@ -1,0 +1,51 @@
+---
+- name: Join Docker swarm
+  hosts: all
+  become: true 
+
+  vars_prompt:
+    - name: swarm_token
+      prompt: "Enter Docker swarm worker join token"
+      private: yes
+
+    - name: swam_manager_ip
+      prompt: "Enter Docker swarm manager IP"
+      private: no
+
+  tasks:
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+    - name: Allow TCP traffic on port 2377 from 100.64.0.0/10 on tailscale0
+      command: ufw allow in on tailscale0 from 100.64.0.0/10 proto tcp to any port 2377
+
+    - name: Allow TCP traffic on port 7946 from 100.64.0.0/10 on tailscale0
+      command: ufw allow in on tailscale0 from 100.64.0.0/10 to any port 7946
+
+    - name: Allow UDP traffic on port 4789 from 100.64.0.0/10 on tailscale0
+      command: ufw allow in on tailscale0 from 100.64.0.0/10 proto udp to any port 4789
+
+    - name: Allow TCP traffic on port 2377 from fd7a:115c:a1e0:ab12::/64 on tailscale0
+      command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto tcp to any port 2377
+
+    - name: Allow TCP traffic on port 7946 from fd7a:115c:a1e0:ab12::/64 on tailscale0
+      command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 to any port 7946
+
+    - name: Allow UDP traffic on port 4789 from fd7a:115c:a1e0:ab12::/64 on tailscale0
+      command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto udp to any port 4789
+
+    - name: Allow on tailscale0
+      command: ufw allow in on tailscale0
+
+    - name: Reload UFW
+      ufw:
+        state: reloaded
+
+    - name: Join Swarm as Worker
+      command: docker swarm join --token {{ swarm_token }} swam_manager_ip:2377

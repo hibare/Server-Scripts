@@ -1,5 +1,5 @@
 data
-inventory.ini
-test-inventory.ini
+*inventory.ini
+.env
 venv
 config

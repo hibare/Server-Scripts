@@ -1,0 +1,38 @@
+- name: Create New User
+  hosts: all
+  become: true
+  
+  vars_prompt:
+    - name: new_user_password
+      prompt: "Enter the password for the new user"
+      private: yes  # Ensures the input is not echoed to the terminal
+
+  vars:
+    new_username: '{{ lookup("env", "NEW_USERNAME") }}'
+    ssh_key_path: '{{ lookup("env", "SSH_PUB_KEY_PATH") }}'
+    hashed_password: '{{ new_user_password | password_hash("sha512") }}'
+    user_shell: "/bin/bash"
+  
+  tasks:
+    - name: Add new user
+      user:
+        name: "{{ new_username }}"
+        password: "{{ hashed_password }}"
+        shell: "{{ user_shell }}"
+    
+    - name: Add new user to sudo group
+      user:
+        name: "{{ new_username }}"
+        groups: sudo
+        append: yes
+
+    - name: Copy SSH key
+      authorized_key:
+        user: "{{ new_username }}"
+        key: "{{ lookup('file', ssh_key_path) }}"
+    
+    - name: Grant passwordless sudo access to the new user
+      lineinfile:
+        dest: /etc/sudoers
+        insertafter: EOF
+        line: "{{ new_username }} ALL=(ALL) NOPASSWD:ALL"
