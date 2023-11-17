@@ -31,22 +31,25 @@ INVENTORY_FILE ?= inventory.ini
 
 .PHONY: ansible-local-setup
 ansible-local-setup: ## Ansible Local Setup 
-	@echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n"
-	@sudo apt install sshpass -y
-	@echo -e "\n$(BLUE) [!] Installing python3-venv...$(NC) \n"
-	@sudo apt install python3-venv -y
-	@echo -e "\n$(BLUE) [!] Creating Python venv...$(NC) \n";
+	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
+	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
+
+	@echo -e "\n$(BLUE) [!] Checking python3-venv...$(NC)"
+	@which python3 > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Python3 not found. Please install Python3." && exit 1)
+	@@python3 -m venv -h > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing python3-venv...$(NC) \n" && sudo apt-get install python3-venv -y)
+
+	@echo -e "\n$(BLUE) [!] Creating Python venv...$(NC)";
 	@python3 -m venv venv
-	@echo -e "\n$(GREEN) [!] Created Python venv...$(NC) \n";
-	@echo -e "\n$(GREEN) [!] To activate: source ./venv/bin/activate...$(NC) \n";
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
+	@echo -e "\n$(GREEN) [!] Created Python venv...$(NC)";
+	@echo -e "\n$(GREEN) [!] To activate: source ./venv/bin/activate...$(NC)";
+	
+	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC)";
 	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Installing Python package passlib...$(NC) \n"; \
-	python3 -m pip install --upgrade passlib; \
-	echo -e "\n$(BLUE) [!] Installing Python package ansible...$(NC) \n"; \
-	python3 -m pip install --upgrade ansible; \
-	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC) \n"; \
-	ansible-galaxy collection install -r ansible/requirements.yml;
+	echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"; \
+	python3 -m pip install -r ansible/requirements.txt > /dev/null; \
+	python3 -m pip install -r ansible/dev-requirements.txt > /dev/null; \
+	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC)"; \
+	ansible-galaxy collection install -r ansible/galaxy-requirements.yml > /dev/null;
 
 define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
