@@ -46,85 +46,53 @@ ansible-local-setup: ## Ansible Local Setup
 	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC) \n"; \
 	ansible-galaxy collection install -r ansible/requirements.yml;
 
-.PHONY: ansible-system-update
-ansible-system-update: ## Ansible System Update
+define run_ansible_playbook
 	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
 	@source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
-	ansible-playbook playbooks/system/update.yml -i inventory.ini
+	ansible-playbook $(1) -i inventory.ini
+endef
+
+.PHONY: ansible-system-update
+ansible-system-update: ## Ansible System Update
+	$(call run_ansible_playbook, playbooks/system/update.yml)
 
 .PHONY: ansible-ssytem-reboot-notifier
 ansible-system-reboot-notifier: ## Ansible System Reboot Notifier
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/reboot-notifier.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/reboot-notifier.yml)
 	
 .PHONY: ansible-system-reboot
 ansible-system-reboot: ## Ansible System Reboot
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/reboot.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/reboot.yml)
 
 .PHONY: ansible-system-set-ist-timezone
 ansible-system-set-ist-timezone: ## Ansible Set IST Timezone
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/set-ist-timezone.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/set-ist-timezone.yml)
 
 .PHONY: ansible-system-install-backup
 ansible-system-install-backup: ## Ansible System Install Backup
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/install-backup.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/install-backup.yml)
 
 .PHONY: ansible-system-install-ssh-login-notifier
 ansible-system-install-ssh-login-notifier: ## Ansible System Install SSH Login Notifier
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/ssh-login-alert.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/ssh-login-alert.yml)
 
 .PHONY: ansible-system-install-update-notifier
 ansible-system-install-update-notifier: ## Ansible System Install Update Notifier
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/update-notifier.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/update-notifier.yml)
 
 .PHONY: ansible-system-push-env-vars
 ansible-system-push-env-vars: ## Ansible System push env vars
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/push-env-vars.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/push-env-vars.yml)
 
 .PHONY: ansible-system-docker-stack-update
 ansible-system-docker-stack-update: ## Ansible System Docker Stack Update
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/docker-stack-update.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/docker-stack-update.yml)
 
 .PHONY: ansible-system-docker-prune
 ansible-system-docker-prune: ## Ansible System Docker Prune
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
-	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
-	ansible-playbook playbooks/system/docker-prune.yml -i inventory.ini
+	$(call run_ansible_playbook, playbooks/system/docker-prune.yml)
 	
 .PHONY: help	
 help: ## Disply this help
