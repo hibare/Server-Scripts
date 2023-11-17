@@ -27,6 +27,8 @@ NC=\033[0m
 
 .DEFAULT_GOAL := help
 
+INVENTORY_FILE ?= inventory.ini
+
 .PHONY: ansible-local-setup
 ansible-local-setup: ## Ansible Local Setup 
 	@echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n"
@@ -47,11 +49,12 @@ ansible-local-setup: ## Ansible Local Setup
 	ansible-galaxy collection install -r ansible/requirements.yml;
 
 define run_ansible_playbook
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n";
-	@source ./venv/bin/activate; \
+	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
+	source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd  ansible; \
-	ansible-playbook $(1) -i inventory.ini
+	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
+	ansible-playbook $(1) -i $(INVENTORY_FILE);
 endef
 
 .PHONY: ansible-system-update
