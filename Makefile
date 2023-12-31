@@ -123,6 +123,10 @@ ansible-system-join-docker-swarm: ## Ansible System Join Docker Swarm
 ansible-system-setup-ufw: ## Ansible System Setup UFW
 	$(call run_ansible_playbook, playbooks/system/setup-ufw.yml)
 
+.PHONY: ansible-system-create-swap-file
+ansible-system-create-swap-file: ## Ansible System Create Swap File
+	$(call run_ansible_playbook, playbooks/system/create-swap-file.yml)
+
 .PHONY: help
 help: ## Disply this help
 		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-45s$(NC)%s\n", $$1, $$2}'

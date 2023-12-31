@@ -1,0 +1,39 @@
+---
+- name: Create Swap File
+  hosts: all
+  become: true
+
+  vars_prompt:
+    - name: swap_file_size_mb
+      prompt: "Enter the size of the swap file in megabytes"
+      private: no  # Setting to yes hides the input (useful for sensitive information)
+
+  tasks:
+    - name: Define variables
+      set_fact:
+        swap_file_path: "/swapfile"
+
+    - name: Create swap file
+      command: "fallocate -l {{ swap_file_size_mb }}M {{ swap_file_path }}"
+      args:
+        creates: "{{ swap_file_path }}"
+      register: swap_file_created
+
+    - name: Set permissions for swap file
+      command: "chmod 600 {{ swap_file_path }}"
+      when: swap_file_created.changed
+
+    - name: Set up swap space
+      command: "mkswap {{ swap_file_path }}"
+      when: swap_file_created.changed
+
+    - name: Enable swap
+      command: "swapon {{ swap_file_path }}"
+      when: swap_file_created.changed
+
+    - name: Add swap entry to /etc/fstab
+      lineinfile:
+        path: "/etc/fstab"
+        line: "{{ swap_file_path }} none swap sw 0 0"
+        state: present
+      when: swap_file_created.changed
