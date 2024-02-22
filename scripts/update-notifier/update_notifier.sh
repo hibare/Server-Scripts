@@ -1,6 +1,9 @@
 #!/bin/bash
 
+echo "[Start] Running update notifier..."
+
 # Run update check
+echo "Running update check..."
 apt-get update
 
 message=""
@@ -10,11 +13,13 @@ IFS=';' read updates security_updates < <(/usr/lib/update-notifier/apt-check 2>&
 
 if [ $updates -gt 0 ]
 then
+    echo "Found $updates updates that can be applied immediately."
     message="${message}${updates} updates can be applied immediately."
 fi
 
 if [ $security_updates -gt 0 ]
 then
+    echo "Found $security_updates standard security updates."
     message="${message}\n${security_updates} of these updates are standard security updates."
 fi
 
@@ -29,6 +34,7 @@ then
 
     message="${message}\n\nThe following packages need to be updated:${joined_packages}"
     
+    echo "Sending alert..."
     curl --request POST \
         --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \
         --header 'Content-Type: application/json' \
@@ -51,3 +57,5 @@ then
         }
         '
 fi
+
+echo "[End] Completed update notifier."
