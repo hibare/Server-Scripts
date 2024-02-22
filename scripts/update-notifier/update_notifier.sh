@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run update check
+apt-get update
+
 message=""
 server="$(hostname -f)"
 
