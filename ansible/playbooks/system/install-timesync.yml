@@ -1,0 +1,20 @@
+---
+- name: Configure Time Synchronization
+  hosts: all
+  become: true  # Run tasks with sudo
+
+  tasks:
+    - name: Check distribution
+      command: cat /etc/os-release
+      register: distribution_info
+
+    - name: Install systemd or chrony package
+      apt:
+        name: "{{ 'systemd' if ('Ubuntu' in distribution_info.stdout) else 'chrony' }}"
+        state: present
+
+    - name: Enable and start time synchronization service
+      systemd:
+        name: "{{ 'systemd-timesyncd' if ('Ubuntu' in distribution_info.stdout) else 'chrony' }}"
+        enabled: yes
+        state: started

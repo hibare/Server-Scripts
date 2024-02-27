@@ -131,6 +131,11 @@ ansible-system-create-swap-file: ## Ansible System Create Swap File
 ansible-system-install-grafana-agent: ## Ansible System Install Grafana Agent
 	$(call run_ansible_playbook, playbooks/system/install-grafana-agent.yml)
 	
+
+.PHONY: ansible-system-install-timesync
+ansible-system-install-timesync: ## Ansible System Install Timesync
+	$(call run_ansible_playbook, playbooks/system/install-timesync.yml)
+
 .PHONY: help
 help: ## Disply this help
 		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-45s$(NC)%s\n", $$1, $$2}'
