@@ -131,6 +131,9 @@ ansible-system-create-swap-file: ## Ansible System Create Swap File
 ansible-system-install-grafana-agent: ## Ansible System Install Grafana Agent
 	$(call run_ansible_playbook, playbooks/system/install-grafana-agent.yml)
 	
+.PHONY: ansible-system-uninstall-grafana-agent
+ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agent
+	$(call run_ansible_playbook, playbooks/system/uninstall-grafana-agent.yml)
 
 .PHONY: ansible-system-install-timesync
 ansible-system-install-timesync: ## Ansible System Install Timesync

@@ -1,0 +1,37 @@
+- name: Uninstall Grafana Agent
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Stop Grafana Agent service
+      ansible.builtin.service:
+        name: grafana-agent
+        state: stopped
+
+    - name: Remove Grafana Agent binary
+      ansible.builtin.file:
+        path: /usr/local/bin/grafana-agent
+        state: absent
+
+    - name: Remove Grafana Agent configuration directory
+      ansible.builtin.file:
+        path: /etc/grafana-agent
+        state: absent
+
+    - name: Remove Grafana Agent systemd service file
+      ansible.builtin.file:
+        path: /lib/systemd/system/grafana-agent.service
+        state: absent
+
+    # Add more tasks here if Grafana Agent was installed with additional files or configurations
+
+    # Restart the systemd daemon to apply changes
+    - name: Restart systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    # Ensure Grafana Agent won't start on boot
+    - name: Disable Grafana Agent service on boot
+      ansible.builtin.service:
+        name: grafana-agent
+        enabled: no
