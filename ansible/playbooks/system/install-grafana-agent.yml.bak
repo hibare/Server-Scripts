@@ -13,6 +13,9 @@
       ansible.builtin.include_role:
         name: grafana.grafana.grafana_agent
       vars:
+        grafana_agent_user: root # required by cAdvisor
+        grafana_agent_user_groups:
+          - docker # required by cAdvisor
         grafana_agent_metrics_config:
           configs:
             - name: integrations
@@ -38,17 +41,48 @@
               target_config:
                 sync_period: 10s
               scrape_configs:
-                - job_name: varlogs
+                - job_name: integrations/node_exporter_direct_scrape
                   static_configs:
                     - targets: [localhost]
                       labels:
                         instance: ${HOSTNAME:-default}
-                        job: varlogs
+                        job: integrations/node_exporter
                         __path__: /var/log/*log
+                - job_name: integrations/docker
+                  docker_sd_configs:
+                    - host: unix:///var/run/docker.sock
+                      refresh_interval: 5s
+                  relabel_configs:
+                  - action: replace
+                    replacement: integrations/docker
+                    target_label: job
+                  - action: replace
+                    replacement: ${HOSTNAME:-default}
+                    target_label: instance
+                  - source_labels:
+                      - __meta_docker_container_name
+                    regex: '/(.*)'
+                    target_label: container
+                  - source_labels: 
+                      - __meta_docker_container_log_stream
+                    target_label: stream
         grafana_agent_integrations_config:
           node_exporter:
             enabled: true
             instance: ${HOSTNAME:-default}
+          cadvisor:
+            enabled: true
+            docker_only: true
+            instance: ${HOSTNAME:-default}
+            relabel_configs:
+              - action: replace
+                replacement: integrations/docker
+                target_label: job
+            metric_relabel_configs:
+              - action: keep
+                regex: container_cpu_usage_seconds_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_limit_bytes|container_fs_usage_bytes|container_last_seen|container_memory_usage_bytes|container_network_receive_bytes_total|container_network_tcp_usage_total|container_network_transmit_bytes_total|container_spec_memory_reservation_limit_bytes|machine_memory_bytes|machine_scrape_error
+                source_labels:
+                - __name__
           prometheus_remote_write:
             - basic_auth:
                 password: '{{ grafana_cloud_api_key }}'
