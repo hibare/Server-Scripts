@@ -25,5 +25,6 @@
         state: absent
       loop:
         - /etc/apt/sources.list.d/tailscale.list
+        - /etc/sysctl.d/99-tailscale.conf
       ignore_errors: yes
       changed_when: true
