@@ -1,0 +1,39 @@
+---
+- name: Uninstall Docker and remove related data
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Remove Docker packages
+      apt:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - docker
+        - docker-engine
+        - docker.io
+        - containerd
+        - runc
+      ignore_errors: yes
+      changed_when: true
+
+    - name: Remove Docker directories and files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /var/lib/docker
+        - /etc/docker
+        - /etc/apparmor.d/docker
+        - /var/run/docker.sock
+        - /var/lib/containerd
+        - /etc/apt/sources.list.d/docker.list
+      ignore_errors: yes
+      changed_when: true
+
+    - name: Remove Docker group
+      group:
+        name: docker
+        state: absent
+      ignore_errors: yes
+      changed_when: true

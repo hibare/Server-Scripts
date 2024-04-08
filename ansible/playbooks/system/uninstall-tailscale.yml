@@ -1,0 +1,29 @@
+---
+- name: Uninstall Tailscale
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Logout from Tailscale
+      shell: tailscale logout
+      ignore_errors: yes
+
+    - name: Stop Tailscale service
+      systemd:
+        name: tailscaled
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove Tailscale package
+      apt:
+        name: tailscale
+        state: absent
+
+    - name: Remove Tailscale directories and files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/docker.list/tailscale.list
+      ignore_errors: yes
+      changed_when: true

@@ -111,10 +111,18 @@ ansible-system-new-user: ## Ansible System New User
 ansible-system-install-docker: ## Ansible System Install Docker
 	$(call run_ansible_playbook, playbooks/system/install-docker.yml)
 
+.PHONY : ansible-system-uninstall-docker
+ansible-system-uninstall-docker: ## Ansible System Uninstall Docker
+	$(call run_ansible_playbook, playbooks/system/uninstall-docker.yml)
+
 .PHONY: ansible-system-install-tailscale
 ansible-system-install-tailscale: ## Ansible System Install Tailscale
 	$(call run_ansible_playbook, playbooks/system/install-tailscale.yml)
 
+.PHONY: ansible-system-uninstall-tailscale
+ansible-system-uninstall-tailscale: ## Ansible System Uninstall Tailscale
+	$(call run_ansible_playbook, playbooks/system/uninstall-tailscale.yml)
+	
 .PHONY: ansible-system-join-docker-swarm
 ansible-system-join-docker-swarm: ## Ansible System Join Docker Swarm
 	$(call run_ansible_playbook, playbooks/system/join-docker-swarm.yml)
