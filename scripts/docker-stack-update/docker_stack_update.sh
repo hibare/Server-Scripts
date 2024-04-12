@@ -54,7 +54,7 @@ for stack_dir in "$DOCKER_DIR"/*/; do
 
         # Check if any services from the stack were previously running
         if [ -z "$previous_running_services" ]; then
-            echo "⚠️ No previously running services found in stack $stack_name. Skipping start... ⚠️"
+            echo "⚠️ No previously running services found in stack $stack_name. Skipping start... "
             continue
         fi
 
