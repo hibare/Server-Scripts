@@ -65,9 +65,9 @@ define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
 	source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	# set -o allexport; \
-	# source ".env"; \
-	# set +o allexport; \
+	set -o allexport; \
+	source ".env"; \
+	set +o allexport; \
 	cd  ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
 	ansible-playbook $(1) -i $(INVENTORY_FILE);
