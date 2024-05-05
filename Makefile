@@ -157,10 +157,9 @@ ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agen
 ansible-system-install-timesync: ## Ansible System Install Timesync
 	$(call run_ansible_playbook, playbooks/system/install-timesync.yml)
 
-.PHONY: tf-apply
-tf-apply: ## Terraform Apply
-
-	cd terraform && \
+.PHONY: tf-cf-apply
+tf-cf-apply: ## Terraform Cloudflare Apply
+	cd terraform/cloudflare && \
 	terraform init && \
 	terraform apply 
 
