@@ -15,9 +15,9 @@ updates:
         patterns:
           - "*"
 
-  # Maintain dependencies for Go mods
+  # Maintain dependencies for Python
   - package-ecosystem: "pip"
-    directory: "/backend"
+    directory: "/ansible"
     schedule:
       interval: "weekly"
       day: "friday"
@@ -27,5 +27,20 @@ updates:
       - "hibare"
     groups:
       python:
+        patterns:
+          - "*"
+
+  # Maintain dependencies for terraform modules
+  - package-ecosystem: "terraform"
+    directory: "/terraform/cloudflare"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "00:30"
+    target-branch: "master"
+    assignees:
+      - "hibare"
+    groups:
+      terraform:
         patterns:
           - "*"
