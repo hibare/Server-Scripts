@@ -4,4 +4,4 @@ data
 venv
 config
 .terraform
-*.tfstate
+*.tfstate*
