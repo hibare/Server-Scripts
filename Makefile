@@ -29,8 +29,11 @@ NC=\033[0m
 
 INVENTORY_FILE ?= inventory.ini
 
-.PHONY: ansible-local-setup
-ansible-local-setup: ## Ansible Local Setup 
+include .env
+export $(shell sed 's/=.*//' .env)
+
+.PHONY: local-setup
+local-setup: ## Local Setup 
 	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
 	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
 
@@ -51,13 +54,20 @@ ansible-local-setup: ## Ansible Local Setup
 	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC)"; \
 	ansible-galaxy collection install -r ansible/galaxy-requirements.yml > /dev/null;
 
+	@echo -e "\n$(BLUE) [!] installing terraform...$(NC)"; \
+	wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+	echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $$(lsb_release -cs) test" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null && \
+	sudo apt-get update -qq && \
+	sudo apt-get install -y -qq terraform > /dev/null;
+
+
 define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
 	source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	set -o allexport; \
-	source ".env"; \
-	set +o allexport; \
+	# set -o allexport; \
+	# source ".env"; \
+	# set +o allexport; \
 	cd  ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
 	ansible-playbook $(1) -i $(INVENTORY_FILE);
@@ -146,6 +156,13 @@ ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agen
 .PHONY: ansible-system-install-timesync
 ansible-system-install-timesync: ## Ansible System Install Timesync
 	$(call run_ansible_playbook, playbooks/system/install-timesync.yml)
+
+.PHONY: tf-apply
+tf-apply: ## Terraform Apply
+
+	cd terraform && \
+	terraform init && \
+	terraform apply 
 
 .PHONY: help
 help: ## Disply this help
