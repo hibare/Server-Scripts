@@ -157,6 +157,10 @@ ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agen
 ansible-system-install-timesync: ## Ansible System Install Timesync
 	$(call run_ansible_playbook, playbooks/system/install-timesync.yml)
 
+.PHONY: ansible-infisical-agent
+ansible-infisical-agent: ## Ansible Infisical Agent
+	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
+	
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
 	cd terraform/cloudflare && \
@@ -165,4 +169,8 @@ tf-cf-apply: ## Terraform Cloudflare Apply
 
 .PHONY: help
 help: ## Disply this help
-		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-45s$(NC)%s\n", $$1, $$2}'
+	@sed \
+		-e '/^[a-zA-Z0-9_\-]*:.*##/!d' \
+		-e 's/:.*##\s*/:/' \
+		-e 's/^\(.\+\):\(.*\)/$(shell tput setaf 6)\1$(shell tput sgr0):\2/' \
+		$(MAKEFILE_LIST) | column -c2 -t -s :

@@ -1,0 +1,149 @@
+---
+- name: Install Infisical
+  hosts: all
+  become: yes
+  vars:
+    infisical_client_id: '{{ lookup("env", "INFISICAL_CLIENT_ID")}}'
+    infisical_client_secret: '{{ lookup("env", "INFISICAL_CLIENT_SECRET")}}'
+    project_id: '{{ lookup("env", "INFISICAL_PROJECT_ID")}}'
+    secret_env: '{{ lookup("env", "INFISICAL_SECRET_ENV")}}'
+    secret_path: '{{ lookup("env", "INFISICAL_SECRET_PATH")}}'
+    merge_env_script: '{{ lookup("env", "MERGE_ENV_SCRIPT_SOURCE")}}'
+  tasks:
+    - name: Install prerequisites for downloading Infisical
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - curl
+        - gnupg
+        - apt-transport-https
+        - ca-certificates
+      become: yes
+
+    - name: Download installation script
+      get_url:
+        url: "https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh"
+        dest: "/tmp/infisical.sh"
+        mode: "0755"
+
+    - name: Execute installation
+      command: "/tmp/infisical.sh"
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Infisical
+      apt:
+        name: infisical
+        state: present
+        update_cache: yes
+
+    - name: Create directory for Infisical auth files
+      file:
+        path: /etc/infisical/auth
+        state: directory
+        mode: "0755"
+      become: yes
+
+    - name: Create client-id file
+      copy:
+        content: "{{ infisical_client_id }}"
+        dest: /etc/infisical/auth/client-id
+        mode: "0644"
+      become: yes
+
+    - name: Create client-secret file
+      copy:
+        content: "{{ infisical_client_secret }}"
+        dest: /etc/infisical/auth/client-secret
+        mode: "0644"
+      become: yes
+
+    - name: Create directory for Infisical auth files
+      file:
+        path: /etc/infisical/templates
+        state: directory
+        mode: "0755"
+      become: yes
+
+    - name: Create dot-env-template file
+      copy:
+        content: |
+          {{ "{{" }}- with secret "{{ project_id }}" "{{ secret_env }}" "{{ secret_path }}" {{ "}}" }}
+          {{ "{{" }}- range . {{ "}}" }}
+          {{ "{{" }} .Key {{ "}}" }}={{ "{{" }} .Value {{ "}}" }}
+          {{ "{{" }}- end {{ "}}" }}
+          {{ "{{" }}- end {{ "}}" }}
+        dest: /etc/infisical/templates/dot-env-template
+        mode: "0644"
+      become: yes
+
+    - name: Create directory for post process script
+      file:
+        path: /etc/infisical/post-process
+        state: directory
+        mode: "0755"
+      become: yes
+
+    - name: Copy merge-env script
+      get_url:
+        url: "{{ merge_env_script }}"
+        dest: /etc/infisical/post-process/merge_env.py
+        mode: "0755"
+
+    - name: Create Infisical agent config file
+      copy:
+        content: |
+          infisical:
+            address: "https://app.infisical.com"
+          auth:
+            type: "universal-auth"
+            config:
+              client-id: "/etc/infisical/auth/client-id"
+              client-secret: "/etc/infisical/auth/client-secret"
+              remove_client_secret_on_read: false
+          sinks:
+            - type: "file"
+              config:
+                path: "/etc/infisical/sink"
+          templates:
+            - source-path: /etc/infisical/templates/dot-env-template
+              destination-path: /etc/infisical/env
+              config:
+                polling-interval: 60s
+                execute:
+                  timeout: 30
+                  command: python3 /etc/infisical/post-process/merge_env.py --source /etc/infisical/env --destination /etc/environment && reboot
+        dest: /etc/infisical/agent-config.yml
+        mode: "0644"
+      become: yes
+
+    - name: Create Infisical systemd service
+      copy:
+        content: |
+          [Unit]
+          Description=Infisical Agent
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart=/usr/bin/infisical agent --config /etc/infisical/agent-config.yml
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/infisical.service
+        mode: "0644"
+      become: yes
+
+    - name: Reload systemd to load the new service unit
+      systemd:
+        daemon_reload: yes
+
+    - name: Start Infisical service
+      service:
+        name: infisical
+        state: restarted
+        enabled: yes
