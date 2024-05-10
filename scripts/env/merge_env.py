@@ -7,6 +7,9 @@ def read_file(filename):
     data = {}
     with open(filename, 'r') as file:
         for line in file:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
             key, value = line.strip().split('=')
             data[key.strip()] = value.strip()
     return data
