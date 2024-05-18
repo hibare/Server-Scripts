@@ -1,7 +1,7 @@
 ---
 - name: Join Docker swarm
-  hosts: all
-  become: true 
+  hosts: agents
+  become: true
 
   vars_prompt:
     - name: swarm_token
