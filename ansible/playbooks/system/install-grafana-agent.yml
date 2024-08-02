@@ -18,9 +18,9 @@
             - name: integrations
               remote_write:
                 - basic_auth:
-                    password: '{{ grafana_cloud_api_key }}'
-                    username: '{{ metrics_username }}'
-                  url: '{{ prometheus_url }}'
+                    password: "{{ grafana_cloud_api_key }}"
+                    username: "{{ metrics_username }}"
+                  url: "{{ prometheus_url }}"
 
           global:
             scrape_interval: 60s
@@ -30,9 +30,9 @@
             - name: default
               clients:
                 - basic_auth:
-                    password: '{{ grafana_cloud_api_key }}'
-                    username: '{{ logs_username }}'
-                  url: '{{ loki_url }}'
+                    password: "{{ grafana_cloud_api_key }}"
+                    username: "{{ logs_username }}"
+                  url: "{{ loki_url }}"
               positions:
                 filename: /tmp/positions.yaml
               target_config:
@@ -51,8 +51,11 @@
             instance: ${HOSTNAME:-default}
           prometheus_remote_write:
             - basic_auth:
-                password: '{{ grafana_cloud_api_key }}'
-                username: '{{ metrics_username }}'
-              url: '{{ prometheus_url }}'
+                password: "{{ grafana_cloud_api_key }}"
+                username: "{{ metrics_username }}"
+              url: "{{ prometheus_url }}"
         grafana_agent_env_vars:
-          HOSTNAME: '%H'
+          HOSTNAME: "%H"
+
+    - name: Permit Grafana Agent to read logs
+      shell: setfacl -m u:grafana-agent:r /var/log/*log
