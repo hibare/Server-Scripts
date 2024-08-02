@@ -17,11 +17,6 @@
         groups: docker
         append: yes
 
-    - name: Restart Docker service
-      service:
-        name: docker
-        state: restarted
-
     - name: Write /etc/docker/daemon.json
       copy:
         dest: /etc/docker/daemon.json
