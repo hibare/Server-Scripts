@@ -37,22 +37,14 @@ local-setup: ## Local Setup
 	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
 	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
 
-	@echo -e "\n$(BLUE) [!] Checking python3-venv...$(NC)"
-	@which python3 > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Python3 not found. Please install Python3." && exit 1)
-	@@python3 -m venv -h > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing python3-venv...$(NC) \n" && sudo apt-get install python3-venv -y)
-
-	@echo -e "\n$(BLUE) [!] Creating Python venv...$(NC)";
-	@python3 -m venv venv
-	@echo -e "\n$(GREEN) [!] Created Python venv...$(NC)";
-	@echo -e "\n$(GREEN) [!] To activate: source ./venv/bin/activate...$(NC)";
+	# Check if poetry is present else install
+	@echo -e "\n$(BLUE) [!] Checking poetry...$(NC)"
+	@which poetry > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing poetry...$(NC) \n" && curl -sSL https://install.python-poetry.org | python3 -)
 	
-	@echo -e "\n$(BLUE) [!] Activating Python venv...$(NC)";
-	@source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"; \
-	python3 -m pip install -r ansible/requirements.txt > /dev/null; \
-	python3 -m pip install -r ansible/dev-requirements.txt > /dev/null; \
+	poetry install; \
 	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC)"; \
-	ansible-galaxy collection install -r ansible/galaxy-requirements.yml > /dev/null;
+	poetry run ansible-galaxy collection install -r ansible/galaxy-requirements.yml --force> /dev/null;
 
 	@echo -e "\n$(BLUE) [!] installing terraform...$(NC)"; \
 	wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
@@ -62,15 +54,13 @@ local-setup: ## Local Setup
 
 
 define run_ansible_playbook
-	echo -e "\n$(BLUE) [!] Activating Python venv...$(NC) \n"; \
-	source ./venv/bin/activate; \
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	set -o allexport; \
 	source ".env"; \
 	set +o allexport; \
 	cd  ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
-	ansible-playbook $(1) -i $(INVENTORY_FILE);
+	poetry run ansible-playbook $(1) -i $(INVENTORY_FILE);
 endef
 
 .PHONY: ansible-system-update
