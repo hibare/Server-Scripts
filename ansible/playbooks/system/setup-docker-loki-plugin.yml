@@ -20,6 +20,13 @@
         alias: loki
       when: docker_version.rc == 0
 
+    - name: Enable Grafana Loki Docker plugin
+      community.docker.docker_plugin:
+        plugin_name: grafana/loki-docker-driver
+        state: enable
+        alias: loki
+      when: docker_version.rc == 0
+
     - name: Construct url
       set_fact:
         loki_url: "{{ logs_username }}:{{ grafana_cloud_api_key }}@{{ loki_url | regex_replace('^https?://', '') }}"
