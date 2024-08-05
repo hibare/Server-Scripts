@@ -27,6 +27,9 @@ NC=\033[0m
 
 .DEFAULT_GOAL := help
 
+INFISICAL_CMD=infisical --telemetry=false
+INFISICAL_RUN_CMD=$(INFISICAL_CMD) run --env=prod --path=/server
+
 INVENTORY_FILE ?= inventory.ini
 
 include .env
@@ -37,7 +40,12 @@ local-setup: ## Local Setup
 	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
 	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
 
-	# Check if poetry is present else install
+	@echo -e "\n$(BLUE) [!] Checking infisical...$(NC)"
+	@which infisical > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing infisical...$(NC) \n" && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo apt update -qq && sudo apt install -y -qq infisical)
+
+	@echo -e "\n$(BLUE) [!] Initialize infisical...$(NC)"
+	@$(INFISICAL_CMD) init
+
 	@echo -e "\n$(BLUE) [!] Checking poetry...$(NC)"
 	@which poetry > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing poetry...$(NC) \n" && curl -sSL https://install.python-poetry.org | python3 -)
 	
@@ -55,12 +63,9 @@ local-setup: ## Local Setup
 
 define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	set -o allexport; \
-	source ".env"; \
-	set +o allexport; \
 	cd  ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
-	poetry run ansible-playbook $(1) -i $(INVENTORY_FILE);
+	$(INFISICAL_RUN_CMD) -- poetry run ansible-playbook $(1) -i $(INVENTORY_FILE);
 endef
 
 .PHONY: ansible-system-update
@@ -150,7 +155,7 @@ ansible-system-install-timesync: ## Ansible System Install Timesync
 .PHONY: ansible-infisical-agent
 ansible-infisical-agent: ## Ansible Infisical Agent
 	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
-	
+
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
 	cd terraform/cloudflare && \
