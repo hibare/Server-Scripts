@@ -1,0 +1,42 @@
+- name: Setup Docker loki plugin
+  hosts: all
+  become: true
+
+  vars:
+    grafana_cloud_api_key: '{{ lookup("env", "GRAFANA_CLOUD_API_KEY")}}'
+    logs_username: '{{ lookup("env", "GRAFANA_LOG_USERNAME")}}' # Example - 411478
+    loki_url: '{{ lookup("env", "GRAFANA_LOKI_URL")}}'
+
+  tasks:
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_version
+      ignore_errors: yes
+
+    - name: Install Grafana Loki Docker plugin
+      community.docker.docker_plugin:
+        plugin_name: grafana/loki-docker-driver
+        state: present
+        alias: loki
+      when: docker_version.rc == 0
+
+    - name: Construct url
+      set_fact:
+        loki_url: "{{ logs_username }}:{{ grafana_cloud_api_key }}@{{ loki_url | regex_replace('^https?://', '') }}"
+
+    - name: Update daemon.json
+      import_role:
+        name: json_modifier
+      vars:
+        json_file_path: /etc/docker/daemon.json
+        modifier: add
+        additional_content:
+          log-driver: loki
+          log-opts:
+            loki-url: "{{ loki_url }}"
+            loki-batch-size: "500"
+
+    - name: Restart Docker service
+      ansible.builtin.service:
+        name: docker
+        state: restarted

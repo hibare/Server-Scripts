@@ -156,6 +156,10 @@ ansible-system-install-timesync: ## Ansible System Install Timesync
 ansible-infisical-agent: ## Ansible Infisical Agent
 	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
 
+.PHONY: ansible-system-setup-docker-loki-plugin 
+ansible-system-setup-docker-loki-plugin: ## Ansible System Setup Docker Loki Plugin
+	$(call run_ansible_playbook, playbooks/system/setup-docker-loki-plugin.yml)
+
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
 	cd terraform/cloudflare && \
