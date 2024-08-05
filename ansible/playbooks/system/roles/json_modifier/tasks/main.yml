@@ -12,11 +12,6 @@
   register: current_json
   failed_when: false
 
-- name: Read the current file permissions
-  stat:
-    path: "{{ json_file_path }}"
-  register: file_stat
-
 - name: Set default content if JSON file does not exist or is empty
   set_fact:
     json_content: "{}"
@@ -50,9 +45,6 @@
   copy:
     content: "{{ updated_json_content | to_nice_json }}"
     dest: "{{ json_file_path }}"
-    owner: "{{ file_stat.stat.pw_name }}"
-    group: "{{ file_stat.stat.gr_name }}"
-    mode: "{{ file_stat.stat.mode | string | int(base=8) }}"
   when: updated_json_content is defined
 
 - name: Notify if no changes made
