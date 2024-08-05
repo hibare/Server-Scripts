@@ -1,0 +1,61 @@
+---
+- name: Ensure all required parameters are defined
+  assert:
+    that:
+      - json_file_path != ""
+      - modifier in ['add', 'remove']
+    fail_msg: "The 'json_file_path' and 'modifier' parameters must be specified. 'modifier' must be either 'add' or 'remove'."
+
+- name: Read the current JSON file content
+  slurp:
+    src: "{{ json_file_path }}"
+  register: current_json
+  failed_when: false
+
+- name: Read the current file permissions
+  stat:
+    path: "{{ json_file_path }}"
+  register: file_stat
+
+- name: Set default content if JSON file does not exist or is empty
+  set_fact:
+    json_content: "{}"
+  when: current_json.failed or current_json.content | b64decode | length == 0
+
+- name: Decode JSON content from base64
+  set_fact:
+    json_content: "{{ current_json.content | b64decode | from_json }}"
+  when: not current_json.failed
+
+- name: Add or remove content based on modifier
+  block:
+    - name: Add content to JSON file
+      set_fact:
+        updated_json_content: "{{ json_content | combine(additional_content, recursive=True) }}"
+      when: modifier == 'add'
+
+    - name: Remove content from JSON file
+      set_fact:
+        updated_json_content: "{{ json_content | dict2items | selectattr('key', 'search', remove_keys) | items2dict }}"
+      when: modifier == 'remove'
+
+- name: Validate JSON content
+  assert:
+    that:
+      - updated_json_content is defined
+      - updated_json_content | to_json is defined
+    fail_msg: "The updated JSON content must be a dictionary."
+
+- name: Write updated JSON content to file
+  copy:
+    content: "{{ updated_json_content | to_nice_json }}"
+    dest: "{{ json_file_path }}"
+    owner: "{{ file_stat.stat.pw_name }}"
+    group: "{{ file_stat.stat.gr_name }}"
+    mode: "{{ file_stat.stat.mode | string | int(base=8) }}"
+  when: updated_json_content is defined
+
+- name: Notify if no changes made
+  debug:
+    msg: "No changes were made to the JSON file."
+  when: updated_json_content is not defined or (modifier not in ['add', 'remove'])
