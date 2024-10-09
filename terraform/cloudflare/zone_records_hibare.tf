@@ -102,13 +102,13 @@ resource "cloudflare_record" "cname_hibare_send" {
   proxied = true
 }
 
-resource "cloudflare_record" "cname_hibare_test" {
-  zone_id = cloudflare_zone.in-hibare.id
-  name    = "test"
-  value   = "hibare.in"
-  type    = "CNAME"
-  proxied = true
-}
+# resource "cloudflare_record" "cname_hibare_test" {
+#   zone_id = cloudflare_zone.in-hibare.id
+#   name    = "test"
+#   value   = "hibare.in"
+#   type    = "CNAME"
+#   proxied = true
+# }
 
 resource "cloudflare_record" "cname_hibare_tools" {
   zone_id = cloudflare_zone.in-hibare.id
@@ -121,6 +121,14 @@ resource "cloudflare_record" "cname_hibare_tools" {
 resource "cloudflare_record" "cname_hibare_web_chat" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "web-chat"
+  value   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+}
+
+resource "cloudflare_record" "cname_hibare_media" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "media"
   value   = "hibare.in"
   type    = "CNAME"
   proxied = true
