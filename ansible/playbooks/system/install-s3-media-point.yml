@@ -1,0 +1,39 @@
+---
+- name: Mount media bucket
+  hosts: in-oci-04
+  become: true
+  vars:
+    s3_bucket_name: "{{ lookup('env', 'S3_MEDIA_BUCKET') }}"
+    s3_endpoint: "{{ lookup('env', 'S3_MEDIA_ENDPOINT') }}"
+    aws_access_key_id: "{{ lookup('env', 'S3_MEDIA_ACCESS_KEY_ID') }}"
+    aws_secret_access_key: "{{ lookup('env', 'S3_MEDIA_APPLICATION_KEY') }}"
+    mount_point: "/mnt/s3/media"
+    s3fs_config_file: "/etc/passwd-s3fs"
+
+  tasks:
+    - name: Install required packages
+      package:
+        name:
+          - s3fs
+        state: present
+
+    - name: Ensure mount point exists
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+
+    - name: Create s3fs credentials file
+      copy:
+        dest: "{{ s3fs_config_file }}"
+        content: |
+          {{ aws_access_key_id }}:{{ aws_secret_access_key }}
+        mode: "0600"
+
+    - name: Add entry to /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        line: "{{ s3_bucket_name }} {{ mount_point }} fuse.s3fs _netdev,allow_other,use_path_request_style,url={{ s3_endpoint }} 0 0"
+        state: present
+
+    - name: Mount the S3 bucket
+      command: mount -a
