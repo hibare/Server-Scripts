@@ -1,0 +1,35 @@
+---
+- name: Uninstall S3 bucket mount
+  hosts: in-oci-04
+  become: true
+  vars:
+    s3_bucket_name: "{{ lookup('env', 'S3_MEDIA_BUCKET') }}"
+    s3_endpoint: "{{ lookup('env', 'S3_MEDIA_ENDPOINT') }}"
+    mount_point: "/mnt/s3/media"
+    s3fs_config_file: "/etc/passwd-s3fs"
+
+  tasks:
+    - name: Unmount the S3 bucket
+      command: umount "{{ mount_point }}"
+      ignore_errors: true # Ignore errors if the mount point is not mounted
+
+    - name: Remove entry from /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        state: absent
+        line: "{{ s3_bucket_name }} {{ mount_point }} fuse.s3fs _netdev,allow_other,use_path_request_style,url={{ s3_endpoint }} 0 0"
+
+    - name: Remove the s3fs credentials file
+      file:
+        path: "{{ s3fs_config_file }}"
+        state: absent
+
+    - name: Remove the mount point directory
+      file:
+        path: "{{ mount_point }}"
+        state: absent
+
+    - name: Uninstall s3fs package
+      package:
+        name: s3fs
+        state: absent

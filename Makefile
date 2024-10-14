@@ -164,6 +164,10 @@ ansible-system-setup-docker-loki-plugin: ## Ansible System Setup Docker Loki Plu
 ansible-install-s3-media-point: ## Ansible Install S3 Media Point
 	$(call run_ansible_playbook, playbooks/system/install-s3-media-point.yml)
 
+.PHONY: ansible-uninstall-s3-media-point
+ansible-uninstall-s3-media-point: ## Ansible Uninstall S3 Media Point
+	$(call run_ansible_playbook, playbooks/system/uninstall-s3-media-point.yml)
+
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
 	cd terraform/cloudflare && \
