@@ -237,7 +237,7 @@ resource "cloudflare_record" "mx_hibare_3" {
 resource "cloudflare_record" "txt_hibare_dkim" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "dkim._domainkey"
-  content   = "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcuavpbZiToTfTOjfRbuBcSUOK1woYQ1jyXG/PQm4KX8KwJFmRl6eZzr5f7vqiYKbDSUCTPDNU/jaF9mMTvd9s90BLX9DtLytCOiMtf+aE9PU1tkz/HnQpToWq8SIqbKpKw5B4SDlToNf70vK4WBE1VL2HbQyFpcP7/+BiNywJWwIDAQAB"
+  content   = "\"v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcuavpbZiToTfTOjfRbuBcSUOK1woYQ1jyXG/PQm4KX8KwJFmRl6eZzr5f7vqiYKbDSUCTPDNU/jaF9mMTvd9s90BLX9DtLytCOiMtf+aE9PU1tkz/HnQpToWq8SIqbKpKw5B4SDlToNf70vK4WBE1VL2HbQyFpcP7/+BiNywJWwIDAQAB\""
   type    = "TXT"
   proxied = false
 }
@@ -245,7 +245,7 @@ resource "cloudflare_record" "txt_hibare_dkim" {
 resource "cloudflare_record" "txt_hibare_dmarc" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "_dmarc"
-  content   = "v=DMARC1; p=quarantine; rua=mailto:admin@hibare.in; ruf=mailto:admin@hibare.in"
+  content   = "\"v=DMARC1; p=quarantine; rua=mailto:admin@hibare.in; ruf=mailto:admin@hibare.in\""
   type    = "TXT"
   proxied = false
 }
@@ -253,7 +253,7 @@ resource "cloudflare_record" "txt_hibare_dmarc" {
 resource "cloudflare_record" "txt_hibare_gh_pages_challenge" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "_github-pages-challenge-hibare"
-  content   = "66c09cea64f38316d30d3c5f3de784"
+  content   = "\"66c09cea64f38316d30d3c5f3de784\""
   type    = "TXT"
   proxied = false
 }
@@ -261,7 +261,7 @@ resource "cloudflare_record" "txt_hibare_gh_pages_challenge" {
 resource "cloudflare_record" "txt_hibare_haveibeenpwned" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "hibare.in"
-  content   = "have-i-been-pwned-verification=af25af8ac9d9e7e85213613701c46156"
+  content   = "\"have-i-been-pwned-verification=af25af8ac9d9e7e85213613701c46156\""
   type    = "TXT"
   proxied = false
 }
@@ -269,7 +269,7 @@ resource "cloudflare_record" "txt_hibare_haveibeenpwned" {
 resource "cloudflare_record" "txt_hibare_spf" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "hibare.in"
-  content   = "v=spf1 include:zoho.com ~all"
+  content   = "\"v=spf1 include:zoho.com ~all\""
   type    = "TXT"
   proxied = false
 }
@@ -277,7 +277,7 @@ resource "cloudflare_record" "txt_hibare_spf" {
 resource "cloudflare_record" "txt_hibare_zoho_verification" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "hibare.in"
-  content   = "zoho-verification=zb15299188.zmverify.zoho.com"
+  content   = "\"zoho-verification=zb15299188.zmverify.zoho.com\""
   type    = "TXT"
   proxied = false
 }
