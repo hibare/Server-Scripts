@@ -11,7 +11,6 @@ resource "cloudflare_ruleset" "ddos_hibare_in" {
 
     action_parameters {
       id      = "4d21379b4f9f4bb088e0729962c8b3cf"
-      version = "latest"
 
       overrides {
         action            = "challenge"

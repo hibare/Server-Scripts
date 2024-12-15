@@ -19,11 +19,6 @@ resource "cloudflare_zone_settings_override" "zone_settings_hibare_in" {
     ipv6                     = "on"
     max_upload               = 100
     min_tls_version          = "1.0"
-    minify {
-      css  = "on"
-      html = "on"
-      js   = "on"
-    }
     opportunistic_encryption = "on"
     opportunistic_onion      = "on"
     privacy_pass             = "on"
@@ -64,11 +59,6 @@ resource "cloudflare_zone_settings_override" "zone_settings_xyz" {
     ipv6                     = "on"
     max_upload               = 100
     min_tls_version          = "1.0"
-    minify {
-      css  = "on"
-      html = "on"
-      js   = "on"
-    }
     opportunistic_encryption = "on"
     opportunistic_onion      = "on"
     privacy_pass             = "on"

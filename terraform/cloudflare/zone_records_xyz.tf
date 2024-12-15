@@ -1,7 +1,7 @@
 resource "cloudflare_record" "a_xyz" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "09876543.xyz"
-  value   = "95.216.147.137"
+  content   = "95.216.147.137"
   type    = "A"
   proxied = true
 }
@@ -9,7 +9,7 @@ resource "cloudflare_record" "a_xyz" {
 resource "cloudflare_record" "aaaa_xyz" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "09876543.xyz"
-  value   = "2a01:4f9:c011:4672::1"
+  content   = "2a01:4f9:c011:4672::1"
   type    = "AAAA"
   proxied = true
 }
@@ -17,7 +17,7 @@ resource "cloudflare_record" "aaaa_xyz" {
 resource "cloudflare_record" "cname_xyz_hook" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "hook"
-  value   = "09876543.xyz"
+  content   = "09876543.xyz"
   type    = "CNAME"
   proxied = true
 }
@@ -25,7 +25,7 @@ resource "cloudflare_record" "cname_xyz_hook" {
 resource "cloudflare_record" "cname_xyz_ip" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "ip"
-  value   = "09876543.xyz"
+  content   = "09876543.xyz"
   type    = "CNAME"
   proxied = true
 }
@@ -33,7 +33,7 @@ resource "cloudflare_record" "cname_xyz_ip" {
 resource "cloudflare_record" "cname_xyz_www" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "www"
-  value   = "09876543.xyz"
+  content   = "09876543.xyz"
   type    = "CNAME"
   proxied = true
 }
@@ -42,28 +42,28 @@ resource "cloudflare_record" "cname_xyz_www" {
 # resource "cloudflare_record" "mx_xyz_1" {
 #   zone_id = cloudflare_zone.xyz-09876543.id
 #   name    = "09876543.xyz"
-#   value   = "route1.mx.cloudflare.net"
+#   content   = "route1.mx.cloudflare.net"
 #   type    = "MX"
 # }
 
 # resource "cloudflare_record" "mx_xyz_2" {
 #   zone_id = cloudflare_zone.xyz-09876543.id
 #   name    = "09876543.xyz"
-#   value   = "route2.mx.cloudflare.net"
+#   content   = "route2.mx.cloudflare.net"
 #   type    = "MX"
 # }
 
 # resource "cloudflare_record" "mx_xyz_3" {
 #   zone_id = cloudflare_zone.xyz-09876543.id
 #   name    = "09876543.xyz"
-#   value   = "route3.mx.cloudflare.net"
+#   content   = "route3.mx.cloudflare.net"
 #   type    = "MX"
 # }
 
 resource "cloudflare_record" "txt_xyz_spf" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "09876543.xyz"
-  value   = "v=spf1 include:_spf.mx.cloudflare.net ~all"
+  content   = "v=spf1 include:_spf.mx.cloudflare.net ~all"
   type    = "TXT"
 }
 
