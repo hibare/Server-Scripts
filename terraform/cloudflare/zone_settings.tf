@@ -2,7 +2,7 @@ resource "cloudflare_zone_settings_override" "zone_settings_hibare_in" {
   zone_id = cloudflare_zone.in-hibare.id
   settings {
     always_online            = "off"
-    always_use_https         = "off"
+    always_use_https         = "on"
     automatic_https_rewrites = "on"
     brotli                   = "on"
     browser_cache_ttl        = 86400
@@ -11,7 +11,7 @@ resource "cloudflare_zone_settings_override" "zone_settings_hibare_in" {
     challenge_ttl            = 1800
     cname_flattening         = "flatten_at_root"
     development_mode         = "off"
-    early_hints              = "off"
+    early_hints              = "on"
     email_obfuscation        = "on"
     hotlink_protection       = "on"
     http3                    = "on"
@@ -42,7 +42,7 @@ resource "cloudflare_zone_settings_override" "zone_settings_xyz" {
   zone_id = cloudflare_zone.xyz-09876543.id
   settings {
     always_online            = "off"
-    always_use_https         = "off"
+    always_use_https         = "on"
     automatic_https_rewrites = "on"
     brotli                   = "on"
     browser_cache_ttl        = 86400
@@ -51,7 +51,7 @@ resource "cloudflare_zone_settings_override" "zone_settings_xyz" {
     challenge_ttl            = 1800
     cname_flattening         = "flatten_at_root"
     development_mode         = "off"
-    early_hints              = "off"
+    early_hints              = "on"
     email_obfuscation        = "on"
     hotlink_protection       = "on"
     http3                    = "on"
