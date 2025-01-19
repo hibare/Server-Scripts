@@ -63,7 +63,7 @@ local-setup: ## Local Setup
 
 define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
-	cd  ansible; \
+	cd ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
 	$(INFISICAL_RUN_CMD) -- poetry run ansible-playbook $(1) -i $(INVENTORY_FILE);
 endef
@@ -148,6 +148,13 @@ ansible-system-install-grafana-agent: ## Ansible System Install Grafana Agent
 ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agent
 	$(call run_ansible_playbook, playbooks/system/uninstall-grafana-agent.yml)
 
+.PHONY: ansible-system-install-grafana-alloy
+ansible-system-install-grafana-alloy: ## Ansible System Install Grafana alloy
+	$(call run_ansible_playbook, playbooks/system/install-grafana-alloy.yml)
+
+# ToDO: Add uninstall playbook
+# https://galaxy.ansible.com/ui/repo/published/grafana/grafana/content/role/alloy/
+
 .PHONY: ansible-system-install-timesync
 ansible-system-install-timesync: ## Ansible System Install Timesync
 	$(call run_ansible_playbook, playbooks/system/install-timesync.yml)
@@ -155,7 +162,7 @@ ansible-system-install-timesync: ## Ansible System Install Timesync
 .PHONY: ansible-infisical-agent
 ansible-infisical-agent: ## Ansible Infisical Agent
 	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
-	
+
 .PHONY: ansible-system-setup-docker-loki-plugin 
 ansible-system-setup-docker-loki-plugin: ## Ansible System Setup Docker Loki Plugin
 	$(call run_ansible_playbook, playbooks/system/setup-docker-loki-plugin.yml)

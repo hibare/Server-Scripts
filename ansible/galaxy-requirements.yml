@@ -1,8 +1,10 @@
-
 ---
 collections:
   - name: ansible.posix
     source: https://galaxy.ansible.com
 
   - name: community.docker
+    source: https://galaxy.ansible.com
+
+  - name: grafana.grafana
     source: https://galaxy.ansible.com

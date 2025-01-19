@@ -1,0 +1,96 @@
+- name: Install Alloy
+  hosts: all
+  become: true
+
+  vars:
+    grafana_cloud_api_key: '{{ lookup("env", "GRAFANA_CLOUD_API_KEY")}}'
+    metrics_username: '{{ lookup("env", "GRAFANA_METRIC_USERNAME")}}' # Example - 825019
+    logs_username: '{{ lookup("env", "GRAFANA_LOG_USERNAME")}}' # Example - 411478
+    prometheus_url: '{{ lookup("env", "GRAFANA_PROM_URL")}}'
+    loki_url: '{{ lookup("env", "GRAFANA_LOKI_URL")}}'
+
+  tasks:
+    - name: Install Alloy
+      ansible.builtin.include_role:
+        name: grafana.grafana.alloy
+      vars:
+        alloy_config: |
+          prometheus.remote_write "metrics_integrations" {
+            endpoint {
+              name = "integrations-62fba4"
+              url  = "{{ prometheus_url }}"
+
+              basic_auth {
+                username = "{{ metrics_username }}"
+                password = "{{ grafana_cloud_api_key }}"
+              }
+
+              queue_config { }
+
+              metadata_config { }
+            }
+          }
+
+          local.file_match "logs_default_varlogs" {
+            path_targets = [{
+              __address__ = "localhost",
+              __path__    = "/var/log/*log",
+              instance    = sys.env("HOSTNAME"),
+              job         = "varlogs",
+            }]
+          }
+
+          loki.source.file "logs_default_varlogs" {
+            targets               = local.file_match.logs_default_varlogs.targets
+            forward_to            = [loki.write.logs_default.receiver]
+            legacy_positions_file = "/tmp/positions.yaml"
+          }
+
+          loki.write "logs_default" {
+            endpoint {
+              url = "{{ loki_url }}"
+
+              basic_auth {
+                username = "{{ logs_username }}"
+                password = "{{ grafana_cloud_api_key }}"
+              }
+            }
+            external_labels = {}
+          }
+
+          prometheus.exporter.unix "integrations_node_exporter" { }
+
+          discovery.relabel "integrations_node_exporter" {
+            targets = prometheus.exporter.unix.integrations_node_exporter.targets
+
+            rule {
+              target_label = "instance"
+              replacement  = sys.env("HOSTNAME")
+            }
+
+            rule {
+              target_label = "job"
+              replacement  = "integrations/node_exporter"
+            }
+          }
+
+          prometheus.scrape "integrations_node_exporter" {
+            targets    = discovery.relabel.integrations_node_exporter.output
+            forward_to = [prometheus.remote_write.integrations.receiver]
+            job_name   = "integrations/node_exporter"
+          }
+
+          prometheus.remote_write "integrations" {
+            endpoint {
+              url = "{{ prometheus_url }}"
+
+              basic_auth {
+                username = "{{ metrics_username }}"
+                password = "{{ grafana_cloud_api_key }}"
+              }
+
+              queue_config { }
+
+              metadata_config { }
+            }
+          }
