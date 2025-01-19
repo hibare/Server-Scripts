@@ -289,3 +289,11 @@ resource "cloudflare_record" "cname_hibare_wiki" {
   type    = "CNAME"
   proxied = true
 }
+
+resource "cloudflare_record" "cname_hibare_resume" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "resume"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+}
