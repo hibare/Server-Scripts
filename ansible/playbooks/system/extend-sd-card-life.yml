@@ -1,0 +1,66 @@
+---
+- name: Extend Raspberry Pi SD Card Life
+  hosts: all
+  become: yes
+  tasks:
+    - name: Disable swap
+      command: dphys-swapfile swapoff
+      ignore_errors: yes
+
+    - name: Remove swap file
+      file:
+        path: /var/swap
+        state: absent
+
+    - name: Disable swap service
+      systemd:
+        name: dphys-swapfile
+        enabled: no
+        state: stopped
+
+    - name: Check if /etc/rsyslog.conf exists
+      stat:
+        path: /etc/rsyslog.conf
+      register: rsyslog_conf
+
+    - name: Reduce logging
+      lineinfile:
+        path: /etc/rsyslog.conf
+        regexp: '^#?\\$ActionFileDefaultTemplate'
+        line: "$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat"
+        state: present
+      when: rsyslog_conf.stat.exists
+
+    - name: Reduce journald logging
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^#?Storage="
+        line: "Storage=volatile"
+        state: present
+
+    - name: Mount /tmp, /var/tmp, and /var/log in RAM
+      mount:
+        path: "{{ item.path }}"
+        src: tmpfs
+        fstype: tmpfs
+        opts: "{{ item.opts }}"
+        state: mounted
+      with_items:
+        - { path: /tmp, opts: "defaults,noatime,nosuid,size=100m" }
+        - { path: /var/tmp, opts: "defaults,noatime,nosuid,size=30m" }
+        - {
+            path: /var/log,
+            opts: "defaults,noatime,nosuid,mode=0755,size=100m",
+          }
+
+    - name: Ensure changes are persistent across reboots
+      blockinfile:
+        path: /etc/fstab
+        block: |
+          tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0
+          tmpfs    /var/tmp    tmpfs    defaults,noatime,nosuid,size=30m    0 0
+          tmpfs    /var/log    tmpfs    defaults,noatime,nosuid,mode=0755,size=100m    0 0
+
+    - name: Reboot the system to apply changes
+      reboot:
+        reboot_timeout: 300

@@ -162,7 +162,7 @@ ansible-system-install-timesync: ## Ansible System Install Timesync
 .PHONY: ansible-infisical-agent
 ansible-infisical-agent: ## Ansible Infisical Agent
 	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
-
+	
 .PHONY: ansible-system-setup-docker-loki-plugin 
 ansible-system-setup-docker-loki-plugin: ## Ansible System Setup Docker Loki Plugin
 	$(call run_ansible_playbook, playbooks/system/setup-docker-loki-plugin.yml)
@@ -174,6 +174,10 @@ ansible-install-s3-media-point: ## Ansible Install S3 Media Point
 .PHONY: ansible-uninstall-s3-media-point
 ansible-uninstall-s3-media-point: ## Ansible Uninstall S3 Media Point
 	$(call run_ansible_playbook, playbooks/system/uninstall-s3-media-point.yml)
+
+.PHONY: ansible-rasp-extend-sd-card-life
+ansible-rasp-extend-sd-card-life: ## Ansible Rasp Extend SD Card Life
+	$(call run_ansible_playbook, playbooks/system/extend-sd-card-life.yml)
 
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
