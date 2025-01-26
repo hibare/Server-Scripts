@@ -36,7 +36,15 @@
         state: restarted
 
     - name: Remove docker_gwbridge network if it exists
-      shell: docker network rm docker_gwbridge
+      command: docker network rm docker_gwbridge
+      ignore_errors: yes
+      register: result
+
+    - name: Check if network removal was successful or network did not exist
+      assert:
+        that:
+          - result.rc == 0 or 'network docker_gwbridge not found' in result.stderr
+        fail_msg: "Failed to remove docker_gwbridge network for reasons other than it not existing."
 
     - name: Create docker_gwbridge network with specified options
       shell: >

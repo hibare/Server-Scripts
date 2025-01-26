@@ -14,13 +14,18 @@
 
 - name: Set default content if JSON file does not exist or is empty
   set_fact:
-    json_content: "{}"
-  when: current_json.failed or current_json.content | b64decode | length == 0
+    json_content: {}
+  when: current_json.failed or not current_json.content is defined or current_json.content | b64decode | length == 0
 
 - name: Decode JSON content from base64
   set_fact:
     json_content: "{{ current_json.content | b64decode | from_json }}"
-  when: not current_json.failed
+  when: not current_json.failed and current_json.content is defined
+
+- name: Ensure json_content is a dictionary
+  set_fact:
+    json_content: "{{ json_content | default('{}') | from_json }}"
+  when: json_content is string
 
 - name: Add or remove content based on modifier
   block:
@@ -45,9 +50,3 @@
   copy:
     content: "{{ updated_json_content | to_nice_json }}"
     dest: "{{ json_file_path }}"
-  when: updated_json_content is defined
-
-- name: Notify if no changes made
-  debug:
-    msg: "No changes were made to the JSON file."
-  when: updated_json_content is not defined or (modifier not in ['add', 'remove'])
