@@ -1,7 +1,4 @@
 {
-    "cSpell.words": [
-        "cadvisor",
-        "proto",
-        "tailscale"
-    ]
+  "cSpell.words": ["cadvisor", "proto", "tailscale"],
+  "makefile.configureOnOpen": false
 }
