@@ -30,15 +30,28 @@ resource "cloudflare_ruleset" "firewall_custom_xyz" {
   rules =[
     {
       action      = "block"
-      description = "Russia"
+      description = "Block traffic from Russia, China, and Hong Kong"
       enabled     = true
-      expression  = "(ip.geoip.country eq \"RU\")"
+      expression  = "(ip.geoip.country eq \"RU\") or (ip.geoip.country eq \"CN\") or (ip.geoip.country eq \"HK\")"
     },
     {
-      action      = "block"
-      description = "China"
+      action      = "skip"
+      description = "Bypass requests with User-Agent starting with Moni/"
       enabled     = true
-      expression  = "(ip.geoip.country eq \"CN\")"
+      expression  = "starts_with(http.user_agent, \"Moni/\")"
+
+      action_parameters = {
+        phases = [
+          "http_request_sbfm",
+          "http_request_firewall_managed"
+        ],
+        products = [
+          "uaBlock"
+        ]
+      }
+      logging = {
+        enabled = true
+      }
     }
   ]
 }
