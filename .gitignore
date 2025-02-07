@@ -1,8 +1,20 @@
+# Directories
 data
-*inventory.ini
-.env
+
+# Python
 venv
+
+# Configuration files
+.env
 config
-.terraform
+backend-config.tfvars
+
+# Inventory files
+*inventory.ini
+
+# Terraform state files
 *.tfstate*
+.terraform
+
+# Infisical files
 .infisical.json

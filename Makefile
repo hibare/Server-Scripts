@@ -32,8 +32,6 @@ INFISICAL_RUN_CMD=$(INFISICAL_CMD) run --env=prod --path=/server
 
 INVENTORY_FILE ?= inventory.ini
 
-include .env
-export $(shell sed 's/=.*//' .env)
 
 .PHONY: local-setup
 local-setup: ## Local Setup 
@@ -181,9 +179,11 @@ ansible-rasp-extend-sd-card-life: ## Ansible Rasp Extend SD Card Life
 
 .PHONY: tf-cf-apply
 tf-cf-apply: ## Terraform Cloudflare Apply
-	cd terraform/cloudflare && \
-	terraform init && \
-	terraform apply 
+	cd terraform/cloudflare \
+	&& $(INFISICAL_RUN_CMD) -- sh -c 'echo "endpoint = \"https://$${TF_VAR_CF_ACCOUNT_ID}.r2.cloudflarestorage.com\"" > backend-config.tfvars' \
+	&& $(INFISICAL_RUN_CMD) -- terraform init -backend-config=backend-config.tfvars \
+	&& $(INFISICAL_RUN_CMD) -- terraform apply \
+	; rm -f backend-config.tfvars
 
 .PHONY: help
 help: ## Disply this help
