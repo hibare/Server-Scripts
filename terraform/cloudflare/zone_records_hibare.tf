@@ -325,6 +325,15 @@ resource "cloudflare_dns_record" "cname_hibare_wiki" {
   ttl = 1
 }
 
+resource "cloudflare_dns_record" "cname_hibare_cloud" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "cloud"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+  ttl = 1
+}
+
 resource "cloudflare_dns_record" "cname_hibare_resume" {
   zone_id = cloudflare_zone.in-hibare.id
   name    = "resume"
