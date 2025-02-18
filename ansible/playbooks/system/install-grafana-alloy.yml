@@ -14,6 +14,9 @@
       ansible.builtin.include_role:
         name: grafana.grafana.alloy
       vars:
+        alloy_systemd_override: |
+          [Service]
+          User=root
         alloy_config: |
           prometheus.remote_write "metrics_integrations" {
             endpoint {
@@ -93,4 +96,27 @@
 
               metadata_config { }
             }
+          }
+
+          prometheus.exporter.cadvisor "integrations_cadvisor" {
+              docker_only = true
+          }
+
+          discovery.relabel "integrations_cadvisor" {
+              targets = prometheus.exporter.cadvisor.integrations_cadvisor.targets
+
+              rule {
+                  target_label = "job"
+                  replacement  = "integrations/docker"
+              }
+
+              rule {
+                  target_label = "instance"
+                  replacement  = constants.hostname
+              }
+          }
+
+          prometheus.scrape "integrations_cadvisor" {
+              targets    = discovery.relabel.integrations_cadvisor.output
+              forward_to = [prometheus.remote_write.metrics_integrations.receiver]
           }
