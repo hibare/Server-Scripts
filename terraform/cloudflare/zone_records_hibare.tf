@@ -342,3 +342,12 @@ resource "cloudflare_dns_record" "cname_hibare_resume" {
   proxied = true
   ttl = 1
 }
+
+resource "cloudflare_dns_record" "cname_hibare_dns" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "dns"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+  ttl = 1
+}
