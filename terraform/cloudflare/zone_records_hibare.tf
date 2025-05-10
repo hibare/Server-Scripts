@@ -360,3 +360,30 @@ resource "cloudflare_dns_record" "cname_hibare_code" {
   proxied = true
   ttl = 1
 }
+
+resource "cloudflare_dns_record" "cname_hibare_grafana" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "grafana"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+  ttl = 1
+}
+
+resource "cloudflare_dns_record" "cname_hibare_loki_grafana" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "loki-grafana"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+  ttl = 1
+}
+
+resource "cloudflare_dns_record" "cname_hibare_prometheus_grafana" {
+  zone_id = cloudflare_zone.in-hibare.id
+  name    = "prometheus-grafana"
+  content   = "hibare.in"
+  type    = "CNAME"
+  proxied = true
+  ttl = 1
+}
