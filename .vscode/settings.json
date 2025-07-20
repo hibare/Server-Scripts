@@ -1,4 +1,5 @@
 {
   "cSpell.words": ["cadvisor", "proto", "tailscale"],
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "ansible.python.interpreterPath": "./venv/bin/python"
 }
