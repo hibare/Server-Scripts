@@ -6,10 +6,12 @@ on:
       - "v*"
     branches:
       - main
+      - master
 
   pull_request:
     branches:
       - "main"
+      - "master"
       - "dev"
     paths-ignore:
       - "**/README.md"
