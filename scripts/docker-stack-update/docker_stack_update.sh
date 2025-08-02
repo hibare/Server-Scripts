@@ -37,10 +37,10 @@ running_stacks=$(docker stack ls --format '{{.Name}}' 2>/dev/null)
 # List all subdirectories in the Docker directory
 for stack_dir in "$DOCKER_DIR"/*/; do
     echo "---"
-    
+
     if [ -d "$stack_dir" ] && [ -f "$stack_dir/docker-compose.yml" ]; then
         stack_name=$(basename "$stack_dir")
-        
+
         # Check if the current directory's name is in the list of running stack names
         if echo "$running_stacks" | grep -q -w "$stack_name"; then
             echo "⛔️ Skipping directory $stack_name (running as a stack)"

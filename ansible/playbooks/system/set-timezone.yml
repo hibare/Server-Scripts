@@ -5,7 +5,7 @@
 
   vars:
     timezone: '{{ lookup("env", "TIMEZONE") }}'
-  
+
   tasks:
     - name: Set timezone
       timezone:

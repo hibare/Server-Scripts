@@ -76,4 +76,3 @@ resource "cloudflare_dns_record" "cname_xyz_www" {
 #   type    = "TXT"
 #   ttl = 1
 # }
-

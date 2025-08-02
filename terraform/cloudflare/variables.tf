@@ -11,4 +11,3 @@ variable "CF_ACCOUNT_ID" {
   sensitive   = true
   nullable    = false
 }
-

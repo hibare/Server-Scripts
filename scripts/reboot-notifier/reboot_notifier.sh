@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Check if the system requires a reboot
-if [ -f /var/run/reboot-required ]; then  
+if [ -f /var/run/reboot-required ]; then
   HOST="$(hostname -f)"
-  
+
   curl --request POST \
     --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \
     --header 'Content-Type: application/json' \

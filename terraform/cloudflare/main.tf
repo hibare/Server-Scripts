@@ -9,7 +9,7 @@ terraform {
     skip_requesting_account_id  = true
     skip_s3_checksum            = true
     use_path_style              = true
-    endpoint                =  "https://you-account-id.r2.cloudflarestorage.com" 
+    endpoint                =  "https://you-account-id.r2.cloudflarestorage.com"
   }
 
   required_providers {
