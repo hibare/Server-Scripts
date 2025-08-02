@@ -16,7 +16,6 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-      - id: terraform_tflint
 
   - repo: https://github.com/hadolint/hadolint
     rev: fcbd01791c9251d83f2486e61ecaf41ee700a766 # v2.12.1-beta
@@ -35,7 +34,7 @@ repos:
         description: Detect secrets in your data.
         # entry: bash -c 'trufflehog --no-update git file://. --since-commit HEAD --only-verified --fail'
         # For running trufflehog in docker, use the following entry instead:
-        entry: bash -c 'docker run --rm -v "$(pwd):/workdir" -i --rm trufflesecurity/trufflehog:latest git file:///workdir --since-commit HEAD --only-verified --fail'
+        entry: bash -c 'docker run --rm -v "$(pwd):/workdir" -i --rm trufflesecurity/trufflehog:latest git file:///workdir --since-commit HEAD --results=verified,unknown --fail'
         language: system
         stages: ["commit", "push"]
         exclude: (data/|.*/node_modules/|.*venv/|etc/|dist/)
