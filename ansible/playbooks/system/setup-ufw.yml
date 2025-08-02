@@ -1,7 +1,7 @@
 ---
 - name: Configure UFW and Allow OpenSSH
   hosts: all
-  become: true 
+  become: true
 
   tasks:
     - name: Install UFW
@@ -17,6 +17,18 @@
       ufw:
         rule: allow
         name: OpenSSH
+
+    - name: Allow all traffic on tailscale0 (inbound)
+      ufw:
+        rule: allow
+        interface: tailscale0
+        direction: in
+
+    - name: Allow all traffic on tailscale0 (outbound)
+      ufw:
+        rule: allow
+        interface: tailscale0
+        direction: out
 
     - name: Reload UFW
       ufw:
