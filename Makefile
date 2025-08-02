@@ -35,33 +35,22 @@ INVENTORY_FILE ?= inventory.ini
 
 .PHONY: init
 init: ## Initialize the environment
-	@echo -e "\n$(BLUE) [!] Installing pre-commit...$(NC)"
-	@which pre-commit > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing pre-commit...$(NC) \n" && sudo apt-get install -y -qq pre-commit)
+	@echo -e "\n$(BLUE) [!] Checking required tools...$(NC)"
+	@for cmd in pre-commit sshpass infisical poetry tofu; do \
+		if ! command -v $$cmd >/dev/null 2>&1; then \
+			echo -e "\n$(RED)Error: $$cmd is not installed. Please install it manually.$(NC)"; \
+			exit 1; \
+		fi; \
+	done
 
-	pre-commit install
-
-	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
-	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
-
-	@echo -e "\n$(BLUE) [!] Checking infisical...$(NC)"
-	@which infisical > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing infisical...$(NC) \n" && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo apt update -qq && sudo apt install -y -qq infisical)
-
-	@echo -e "\n$(BLUE) [!] Initialize infisical...$(NC)"
+	@pre-commit install
 	@$(INFISICAL_CMD) init
 
-	@echo -e "\n$(BLUE) [!] Checking poetry...$(NC)"
-	@which poetry > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing poetry...$(NC) \n" && curl -sSL https://install.python-poetry.org | python3 -)
+	@echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"
+	@poetry install
 
-	echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"; \
-	poetry install; \
-	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC)"; \
-	poetry run ansible-galaxy collection install -r ansible/galaxy-requirements.yml --force> /dev/null;
-
-	@which terraform > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing terraform...$(NC) \n" && \
-	wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
-	echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $$(lsb_release -cs) test" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null && \
-	sudo apt-get update -qq && \
-	sudo apt-get install -y -qq terraform > /dev/null)
+	@echo -e "\n$(BLUE) [!] Installing ansible galaxy modules...$(NC)"
+	@poetry run ansible-galaxy collection install -r ansible/galaxy-requirements.yml --force >/dev/null
 
 
 define run_ansible_playbook
