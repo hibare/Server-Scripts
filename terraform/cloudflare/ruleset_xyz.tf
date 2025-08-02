@@ -3,7 +3,7 @@ resource "cloudflare_ruleset" "ddos_xyz" {
   name    = "ddos_xyz"
   phase   = "ddos_l7"
   zone_id = cloudflare_zone.xyz-09876543.id
-  rules =[
+  rules = [
     {
       action      = "execute"
       description = "zone"
@@ -13,7 +13,7 @@ resource "cloudflare_ruleset" "ddos_xyz" {
       action_parameters = {
         id = "4d21379b4f9f4bb088e0729962c8b3cf"
 
-        overrides ={
+        overrides = {
           action            = "challenge"
           sensitivity_level = "default"
         }
@@ -27,7 +27,7 @@ resource "cloudflare_ruleset" "firewall_custom_xyz" {
   name    = "firewall_custom_xyz"
   phase   = "http_request_firewall_custom"
   zone_id = cloudflare_zone.xyz-09876543.id
-  rules =[
+  rules = [
     {
       action      = "block"
       description = "Block traffic from Russia, China, and Hong Kong"
@@ -61,7 +61,7 @@ resource "cloudflare_ruleset" "header_transform_xyz" {
   name    = "header_transform_xyz"
   phase   = "http_request_late_transform"
   zone_id = cloudflare_zone.xyz-09876543.id
-  rules =[
+  rules = [
     {
       action = "rewrite"
       action_parameters = {

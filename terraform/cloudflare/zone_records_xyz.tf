@@ -1,46 +1,46 @@
 resource "cloudflare_dns_record" "a_xyz" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "09876543.xyz"
-  content   = "95.216.147.137"
+  content = "95.216.147.137"
   type    = "A"
   proxied = true
-  ttl = 1
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "aaaa_xyz" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "09876543.xyz"
-  content   = "2a01:4f9:c011:4672::1"
+  content = "2a01:4f9:c011:4672::1"
   type    = "AAAA"
   proxied = true
-  ttl = 1
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "cname_xyz_hook" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "hook"
-  content   = "09876543.xyz"
+  content = "09876543.xyz"
   type    = "CNAME"
   proxied = true
-  ttl = 1
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "cname_xyz_ip" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "ip"
-  content   = "09876543.xyz"
+  content = "09876543.xyz"
   type    = "CNAME"
   proxied = true
-  ttl = 1
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "cname_xyz_www" {
   zone_id = cloudflare_zone.xyz-09876543.id
   name    = "www"
-  content   = "09876543.xyz"
+  content = "09876543.xyz"
   type    = "CNAME"
   proxied = true
-  ttl = 1
+  ttl     = 1
 }
 
 
