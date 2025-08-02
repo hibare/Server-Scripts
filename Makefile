@@ -33,8 +33,13 @@ INFISICAL_RUN_CMD=$(INFISICAL_CMD) run --env=prod --path=/server
 INVENTORY_FILE ?= inventory.ini
 
 
-.PHONY: local-setup
-local-setup: ## Local Setup 
+.PHONY: init
+init: ## Initialize the environment
+	@echo -e "\n$(BLUE) [!] Installing pre-commit...$(NC)"
+	@which pre-commit > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing pre-commit...$(NC) \n" && sudo apt-get install -y -qq pre-commit)
+
+	pre-commit install
+
 	@echo -e "\n$(BLUE) [!] Checking sshpass...$(NC)"
 	@which sshpass > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing sshpass...$(NC) \n" && sudo apt-get install sshpass -y)
 
@@ -46,7 +51,7 @@ local-setup: ## Local Setup
 
 	@echo -e "\n$(BLUE) [!] Checking poetry...$(NC)"
 	@which poetry > /dev/null 2>&1 || (echo -e "\n$(BLUE) [!] Installing poetry...$(NC) \n" && curl -sSL https://install.python-poetry.org | python3 -)
-	
+
 	echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"; \
 	poetry install; \
 	echo -e "\n$(BLUE) [!] Installing ansible galaxy mdoules...$(NC)"; \
@@ -73,7 +78,7 @@ ansible-system-update: ## Ansible System Update
 .PHONY: ansible-ssytem-reboot-notifier
 ansible-system-reboot-notifier: ## Ansible System Reboot Notifier
 	$(call run_ansible_playbook, playbooks/system/reboot-notifier.yml)
-	
+
 .PHONY: ansible-system-reboot
 ansible-system-reboot: ## Ansible System Reboot
 	$(call run_ansible_playbook, playbooks/system/reboot.yml)
@@ -125,7 +130,7 @@ ansible-system-install-tailscale: ## Ansible System Install Tailscale
 .PHONY: ansible-system-uninstall-tailscale
 ansible-system-uninstall-tailscale: ## Ansible System Uninstall Tailscale
 	$(call run_ansible_playbook, playbooks/system/uninstall-tailscale.yml)
-	
+
 .PHONY: ansible-system-join-docker-swarm
 ansible-system-join-docker-swarm: ## Ansible System Join Docker Swarm
 	$(call run_ansible_playbook, playbooks/system/join-docker-swarm.yml)
@@ -141,7 +146,7 @@ ansible-system-create-swap-file: ## Ansible System Create Swap File
 .PHONY: ansible-system-install-grafana-agent
 ansible-system-install-grafana-agent: ## Ansible System Install Grafana Agent
 	$(call run_ansible_playbook, playbooks/system/install-grafana-agent.yml)
-	
+
 .PHONY: ansible-system-uninstall-grafana-agent
 ansible-system-uninstall-grafana-agent: ## Ansible System Uninstall Grafana Agent
 	$(call run_ansible_playbook, playbooks/system/uninstall-grafana-agent.yml)
@@ -160,8 +165,8 @@ ansible-system-install-timesync: ## Ansible System Install Timesync
 .PHONY: ansible-infisical-agent
 ansible-infisical-agent: ## Ansible Infisical Agent
 	$(call run_ansible_playbook, playbooks/system/configure-infisical-agent.yml)
-	
-.PHONY: ansible-system-setup-docker-loki-plugin 
+
+.PHONY: ansible-system-setup-docker-loki-plugin
 ansible-system-setup-docker-loki-plugin: ## Ansible System Setup Docker Loki Plugin
 	$(call run_ansible_playbook, playbooks/system/setup-docker-loki-plugin.yml)
 

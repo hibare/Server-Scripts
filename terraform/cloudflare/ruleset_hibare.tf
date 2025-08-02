@@ -3,7 +3,7 @@ resource "cloudflare_ruleset" "ddos_hibare_in" {
   name    = "ddos_hibare_in"
   phase   = "ddos_l7"
   zone_id = cloudflare_zone.in-hibare.id
-  rules =[ 
+  rules =[
     {
       action      = "execute"
       description = "zone"
@@ -26,7 +26,7 @@ resource "cloudflare_ruleset" "firewall_custom_hibare_in" {
   name    = "firewall_custom_hibare_in"
   phase   = "http_request_firewall_custom"
   zone_id = cloudflare_zone.in-hibare.id
-  rules =[ 
+  rules =[
     {
       action      = "block"
       description = "Block traffic from Russia, China, and Hong Kong"
@@ -60,7 +60,7 @@ resource "cloudflare_ruleset" "header_transform_hibare_in" {
   name    = "header_transform_hibare_in"
   phase   = "http_request_late_transform"
   zone_id = cloudflare_zone.in-hibare.id
-  rules =[ 
+  rules =[
     {
       action = "rewrite"
       action_parameters = {

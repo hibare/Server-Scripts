@@ -147,4 +147,3 @@ resource "cloudflare_zone_setting" "zone_settings_xyz_websockets" {
   setting_id = "websockets"
   value = "on"
 }
-

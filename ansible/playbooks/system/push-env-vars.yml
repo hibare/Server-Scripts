@@ -14,7 +14,7 @@
     - name: Decode .env file contents
       set_fact:
         decoded_env_content: "{{ env_file_contents | b64decode }}"
-      changed_when: false 
+      changed_when: false
 
     - name: Update server environment
       ansible.builtin.lineinfile:

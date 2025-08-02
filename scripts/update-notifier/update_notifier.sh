@@ -33,7 +33,7 @@ then
     done <<< "$packages"
 
     message="${message}\n\nThe following packages need to be updated:${joined_packages}"
-    
+
     echo "Sending alert..."
     curl --request POST \
         --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \

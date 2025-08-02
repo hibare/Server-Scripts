@@ -3,7 +3,7 @@ resource "cloudflare_ruleset" "ddos_xyz" {
   name    = "ddos_xyz"
   phase   = "ddos_l7"
   zone_id = cloudflare_zone.xyz-09876543.id
-  rules =[ 
+  rules =[
     {
       action      = "execute"
       description = "zone"
@@ -61,7 +61,7 @@ resource "cloudflare_ruleset" "header_transform_xyz" {
   name    = "header_transform_xyz"
   phase   = "http_request_late_transform"
   zone_id = cloudflare_zone.xyz-09876543.id
-  rules =[ 
+  rules =[
     {
       action = "rewrite"
       action_parameters = {
