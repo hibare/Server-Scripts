@@ -186,8 +186,8 @@ ansible-rasp-extend-sd-card-life: ## Ansible Rasp Extend SD Card Life
 tf-cf-apply: ## Terraform Cloudflare Apply
 	cd terraform/cloudflare \
 	&& $(INFISICAL_RUN_CMD) -- sh -c 'echo "endpoint = \"https://$${TF_VAR_CF_ACCOUNT_ID}.r2.cloudflarestorage.com\"" > backend-config.tfvars' \
-	&& $(INFISICAL_RUN_CMD) -- terraform init -backend-config=backend-config.tfvars \
-	&& $(INFISICAL_RUN_CMD) -- terraform apply \
+	&& $(INFISICAL_RUN_CMD) -- tofu init -backend-config=backend-config.tfvars \
+	&& $(INFISICAL_RUN_CMD) -- tofu apply \
 	; rm -f backend-config.tfvars
 
 .PHONY: help
