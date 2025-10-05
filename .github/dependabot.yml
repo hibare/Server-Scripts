@@ -17,7 +17,7 @@ updates:
 
   # Maintain dependencies for Python
   - package-ecosystem: "pip"
-    directory: "/ansible"
+    directory: "/"
     schedule:
       interval: "weekly"
       day: "friday"

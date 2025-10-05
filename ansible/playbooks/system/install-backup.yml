@@ -3,10 +3,10 @@
   become: true
   tasks:
     - name: Download and import the Hibare repository
-      apt_key:
+      get_url:
         url: https://apt.hibare.in/gpg.key
-        keyring: /usr/share/keyrings/hibare-keyring.gpg
-        state: present
+        dest: /usr/share/keyrings/hibare-keyring.gpg
+        mode: "0644"
 
     - name: Add Hibare repository source file to Ubuntu's sources list
       copy:

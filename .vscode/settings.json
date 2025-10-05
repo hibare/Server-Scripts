@@ -1,5 +1,14 @@
 {
-  "cSpell.words": ["cadvisor", "proto", "tailscale"],
+  "cSpell.words": [
+    "cadvisor",
+    "daemonset",
+    "hibare",
+    "letsencrypt",
+    "proto",
+    "tailscale",
+    "traefik",
+    "websecure"
+  ],
   "makefile.configureOnOpen": false,
   "ansible.python.interpreterPath": "./venv/bin/python"
 }
