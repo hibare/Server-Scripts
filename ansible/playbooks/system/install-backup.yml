@@ -1,40 +1,36 @@
-- name: Install GoS3Backup
+- name: Install Arclift
   hosts: all
   become: true
   tasks:
-    - name: Download and import the Hibare repository
-      get_url:
-        url: https://apt.hibare.in/gpg.key
-        dest: /usr/share/keyrings/hibare-keyring.gpg
-        mode: "0644"
-
-    - name: Add Hibare repository source file to Ubuntu's sources list
+    - name: Add Hibare repository (Gemfury)
       copy:
         dest: /etc/apt/sources.list.d/hibare.list
-        content: "deb [signed-by=/usr/share/keyrings/hibare-keyring.gpg] https://apt.hibare.in/ * *"
+        content: "deb [trusted=yes] https://apt.hibare.in/ /\n"
 
-    - name: Update Ubuntu's package list
+    - name: Update package list
       apt:
         update_cache: yes
+        cache_valid_time: 3600
 
-    - name: Install GoS3Backup
+    - name: Ensure /etc/arclift exists
+      file:
+        path: /etc/arclift
+        state: directory
+        mode: "0755"
+
+    - name: Install Arclift
       apt:
-        name: gos3backup
+        name: arclift
         state: present
 
-    - name: Copy local file to /etc/gos3backup
+    - name: Copy Arclift config before installation
       copy:
-        src: config/gos3backup-config.yaml
-        dest: /etc/gos3backup/config.yaml
+        src: config/arclift-config.yaml
+        dest: /etc/arclift/config.yaml
+        mode: "0644"
 
-    - name: Restart GoS3Backup service
-      service:
-        name: gos3backup
-        state: restarted
-
-    - name: Check if GoS3Backup service is enabled
+    - name: Enable and restart Arclift service
       systemd:
-        name: gos3backup
-        state: started
+        name: arclift
         enabled: yes
-      register: gos3backup_service
+        state: restarted
