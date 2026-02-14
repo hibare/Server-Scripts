@@ -100,6 +100,10 @@ ansible-system-docker-stack-update: ## Ansible System Docker Stack Update
 ansible-system-docker-prune: ## Ansible System Docker Prune
 	$(call run_ansible_playbook, playbooks/system/docker-prune.yml)
 
+.PHONY: ansible-system-k3s-crictl-prune
+ansible-system-k3s-crictl-prune: ## Ansible System K3s Crictl Prune
+	$(call run_ansible_playbook, playbooks/system/k3s-crictl-prune.yml)
+
 .PHONY: ansible-system-new-user
 ansible-system-new-user: ## Ansible System New User
 	$(call run_ansible_playbook, playbooks/system/new-user.yml)

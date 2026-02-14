@@ -1,0 +1,7 @@
+---
+- name: Prune K3s Crictl Images
+  hosts: all
+
+  tasks:
+    - name: Run K3s Crictl Prune
+      command: sudo k3s crictl rmi --prune
