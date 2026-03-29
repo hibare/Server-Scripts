@@ -5,7 +5,7 @@ if [ -f /var/run/reboot-required ]; then
   HOST="$(hostname -f)"
 
   curl --request POST \
-    --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \
+    --url "${DISCORD_WEBHOOK_UPDATE_NOTIFIER}" \
     --header 'Content-Type: application/json' \
     --data '{
     "username": "Server Reboot",
