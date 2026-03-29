@@ -9,21 +9,21 @@ apt-get update
 message=""
 server="$(hostname -f)"
 
-IFS=';' read updates security_updates < <(/usr/lib/update-notifier/apt-check 2>&1)
+IFS=';' read -r updates security_updates < <(/usr/lib/update-notifier/apt-check 2>&1)
 
-if [ $updates -gt 0 ]
+if [ "$updates" -gt 0 ]
 then
     echo "Found $updates updates that can be applied immediately."
     message="${message}${updates} updates can be applied immediately."
 fi
 
-if [ $security_updates -gt 0 ]
+if [ "$security_updates" -gt 0 ]
 then
     echo "Found $security_updates standard security updates."
     message="${message}\n${security_updates} of these updates are standard security updates."
 fi
 
-if [ ! -z "$message"  ]
+if [ -n "$message" ]
 then
     packages="$(/usr/lib/update-notifier/apt-check --package-names 2>&1)"
     joined_packages=""
@@ -36,7 +36,7 @@ then
 
     echo "Sending alert..."
     curl --request POST \
-        --url ${DISCORD_WEBHOOK_UPDATE_NOTIFIER} \
+        --url "${DISCORD_WEBHOOK_UPDATE_NOTIFIER}" \
         --header 'Content-Type: application/json' \
         --data '{
         "username": "Server Notifications",

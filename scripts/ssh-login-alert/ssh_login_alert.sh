@@ -1,11 +1,11 @@
+#!/bin/bash
 # /etc/profile.d/ssh_login_alert.sh
 
 if [ -n "$SSH_CLIENT" ]; then
-    USER="${USER}"
     HOST="$(hostname -f)"
-    IP="$(echo $SSH_CLIENT|awk '{print $1}')"
+    IP="$(echo "$SSH_CLIENT"|awk '{print $1}')"
     curl --request POST \
-    --url ${DISCORD_WEBHOOK_SSH_LOGIN} \
+    --url "${DISCORD_WEBHOOK_SSH_LOGIN}" \
     --header 'Content-Type: application/json' \
     --data '{
     "username": "Server Notifications",
