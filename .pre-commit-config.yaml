@@ -1,6 +1,8 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-json
@@ -17,27 +19,37 @@ repos:
       - id: terraform_fmt
       - id: terraform_validate
 
-  - repo: https://github.com/hadolint/hadolint
-    rev: fcbd01791c9251d83f2486e61ecaf41ee700a766 # v2.12.1-beta
+  - repo: https://github.com/psf/black
+    rev: 26.3.1
     hooks:
-      - id: hadolint-docker
-        name: Lint Dockerfiles
-        description: Runs hadolint Docker image to lint Dockerfiles
-        language: docker_image
-        types: ["dockerfile"]
-        entry: ghcr.io/hadolint/hadolint hadolint
+      - id: black
+        language_version: python3
+        types: [python]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 8.0.1
+    hooks:
+      - id: isort
+        language_version: python3
+        types: [python]
+        args:
+          - --profile=black
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
 
   - repo: local
     hooks:
       - id: trufflehog
         name: TruffleHog
         description: Detect secrets in your data.
-        # entry: bash -c 'trufflehog --no-update git file://. --since-commit HEAD --only-verified --fail'
-        # For running trufflehog in docker, use the following entry instead:
         entry: bash -c 'docker run --rm -v "$(pwd):/workdir" -i --rm trufflesecurity/trufflehog:latest git file:///workdir --since-commit HEAD --results=verified,unknown --fail'
         language: system
         stages: ["commit", "push"]
         exclude: (data/|.*/node_modules/|.*venv/|etc/|dist/)
+
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 3.0.0
     hooks:
