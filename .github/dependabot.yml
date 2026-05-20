@@ -1,46 +1,44 @@
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "master"
-    assignees:
-      - "hibare"
-    groups:
-      actions:
-        patterns:
-          - "*"
-
-  # Maintain dependencies for Python
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "master"
-    assignees:
-      - "hibare"
-    groups:
-      python:
-        patterns:
-          - "*"
-
-  # Maintain dependencies for terraform modules
-  - package-ecosystem: "terraform"
-    directory: "/terraform/cloudflare"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "master"
-    assignees:
-      - "hibare"
-    groups:
-      terraform:
-        patterns:
-          - "*"
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: master
+  assignees:
+  - hibare
+  groups:
+    actions:
+      patterns:
+      - '*'
+  cooldown-period: 10
+- package-ecosystem: pip
+  directory: /
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: master
+  assignees:
+  - hibare
+  groups:
+    python:
+      patterns:
+      - '*'
+  cooldown-period: 10
+- package-ecosystem: terraform
+  directory: /terraform/cloudflare
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: master
+  assignees:
+  - hibare
+  groups:
+    terraform:
+      patterns:
+      - '*'
+  cooldown-period: 10
