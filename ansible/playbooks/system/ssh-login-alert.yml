@@ -9,12 +9,12 @@
 
   tasks:
     - name: Check if the script is present
-      stat:
+      ansible.builtin.stat:
         path: "{{ script_dest }}/ssh_login_alert.sh"
       register: script_stat
 
     - name: Load script if not present or updated
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ script_url }}"
         dest: "{{ script_dest }}"
         mode: '0755'

@@ -12,7 +12,7 @@
         env_file_contents: "{{ lookup('file', env_file) }}"
 
     - name: Decode .env file contents
-      set_fact:
+      ansible.builtin.set_fact:
         decoded_env_content: "{{ env_file_contents | b64decode }}"
       changed_when: false
 

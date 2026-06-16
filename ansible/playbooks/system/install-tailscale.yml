@@ -10,36 +10,36 @@
 
   tasks:
     - name: Download Tailscale convenience script
-      get_url:
+      ansible.builtin.get_url:
         url: https://tailscale.com/install.sh
         dest: /tmp/get-tailscale.sh
 
     - name: Run Tailscale convenience script
-      command: sh /tmp/get-tailscale.sh
+      ansible.builtin.command: sh /tmp/get-tailscale.sh
 
     - name: Run Tailscale up with authkey
-      command: tailscale up --authkey {{ tailscale_authkey }} --ssh
+      ansible.builtin.command: tailscale up --authkey {{ tailscale_authkey }} --ssh
 
     - name: Create 99-tailscale.conf file
-      file:
+      ansible.builtin.file:
         path: /etc/sysctl.d/99-tailscale.conf
         state: touch
         mode: "0644"
 
     - name: Add net.ipv4.ip_forward to sysctl.d/99-tailscale.conf
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sysctl.d/99-tailscale.conf
         line: "net.ipv4.ip_forward = 1"
       notify: Reload sysctl
 
     - name: Add net.ipv6.conf.all.forwarding to sysctl.d/99-tailscale.conf
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sysctl.d/99-tailscale.conf
         line: "net.ipv6.conf.all.forwarding = 1"
       notify: Reload sysctl
 
     - name: Reload sysctl
-      command: sysctl -p /etc/sysctl.d/99-tailscale.conf
+      ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf
       async: 0
       poll: 0
       become: true
@@ -47,4 +47,4 @@
 
   handlers:
     - name: Reload sysctl
-      command: sysctl -p /etc/sysctl.d/99-tailscale.conf
+      ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf

@@ -5,22 +5,22 @@
 
   tasks:
     - name: Logout from Tailscale
-      shell: tailscale logout
+      ansible.builtin.shell: tailscale logout
       ignore_errors: yes
 
     - name: Stop Tailscale service
-      systemd:
+      ansible.builtin.systemd:
         name: tailscaled
         state: stopped
       ignore_errors: yes
 
     - name: Remove Tailscale package
-      apt:
+      ansible.builtin.apt:
         name: tailscale
         state: absent
 
     - name: Remove Tailscale directories and files
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop:

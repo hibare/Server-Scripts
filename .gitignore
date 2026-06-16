@@ -21,3 +21,6 @@ backend-config.tfvars
 
 # Infisical files
 .infisical.json
+
+# Backup files
+*.bak

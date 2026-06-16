@@ -4,34 +4,34 @@
   become: true
   tasks:
     - name: Add Hibare repository (Gemfury)
-      copy:
+      ansible.builtin.copy:
         dest: /etc/apt/sources.list.d/hibare.list
         content: "deb [trusted=yes] https://apt.hibare.in/ /\n"
 
     - name: Update package list
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         cache_valid_time: 3600
 
     - name: Ensure /etc/arclift exists
-      file:
+      ansible.builtin.file:
         path: /etc/arclift
         state: directory
         mode: "0755"
 
     - name: Install Arclift
-      apt:
+      ansible.builtin.apt:
         name: arclift
         state: present
 
     - name: Copy Arclift config before installation
-      copy:
+      ansible.builtin.copy:
         src: config/arclift-config.yaml
         dest: /etc/arclift/config.yaml
         mode: "0644"
 
     - name: Enable and restart Arclift service
-      systemd:
+      ansible.builtin.systemd:
         name: arclift
         enabled: yes
         state: restarted

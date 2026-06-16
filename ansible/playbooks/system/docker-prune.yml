@@ -4,4 +4,4 @@
 
   tasks:
     - name: Run Docker System Prune
-      command: docker system prune --all -f
+      ansible.builtin.command: docker system prune --all -f

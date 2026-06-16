@@ -5,21 +5,21 @@
 
   tasks:
     - name: Download Docker convenience script
-      get_url:
+      ansible.builtin.get_url:
         url: https://get.docker.com
         dest: /tmp/get-docker.sh
 
     - name: Run Docker convenience script
-      command: sh /tmp/get-docker.sh
+      ansible.builtin.command: sh /tmp/get-docker.sh
 
     - name: Add current user to the Docker group
-      user:
+      ansible.builtin.user:
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
 
     - name: Update daemon.json
-      import_role:
+      ansible.builtin.import_role:
         name: json_modifier
       vars:
         json_file_path: /etc/docker/daemon.json
@@ -37,18 +37,18 @@
         state: restarted
 
     - name: Remove docker_gwbridge network if it exists
-      command: docker network rm docker_gwbridge
+      ansible.builtin.command: docker network rm docker_gwbridge
       ignore_errors: yes
       register: result
 
     - name: Check if network removal was successful or network did not exist
-      assert:
+      ansible.builtin.assert:
         that:
           - result.rc == 0 or 'network docker_gwbridge not found' in result.stderr
         fail_msg: "Failed to remove docker_gwbridge network for reasons other than it not existing."
 
     - name: Create docker_gwbridge network with specified options
-      shell: >
+      ansible.builtin.shell: >
         docker network create --driver bridge
         --opt com.docker.network.driver.mtu=1280
         --opt com.docker.network.bridge.enable_ip_masquerade=true

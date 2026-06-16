@@ -59,4 +59,4 @@
           HOSTNAME: "%H"
 
     - name: Permit Grafana Agent to read logs
-      shell: setfacl -m u:grafana-agent:r /var/log/*log
+      ansible.builtin.shell: setfacl -m u:grafana-agent:r /var/log/*log

@@ -5,7 +5,7 @@
 
   tasks:
     - name: Remove Docker packages
-      apt:
+      ansible.builtin.apt:
         name: "{{ item }}"
         state: absent
       loop:
@@ -18,7 +18,7 @@
       changed_when: true
 
     - name: Remove Docker directories and files
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop:
@@ -32,7 +32,7 @@
       changed_when: true
 
     - name: Remove Docker group
-      group:
+      ansible.builtin.group:
         name: docker
         state: absent
       ignore_errors: yes

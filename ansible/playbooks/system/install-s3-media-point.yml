@@ -12,28 +12,28 @@
 
   tasks:
     - name: Install required packages
-      package:
+      ansible.builtin.package:
         name:
           - s3fs
         state: present
 
     - name: Ensure mount point exists
-      file:
+      ansible.builtin.file:
         path: "{{ mount_point }}"
         state: directory
 
     - name: Create s3fs credentials file
-      copy:
+      ansible.builtin.copy:
         dest: "{{ s3fs_config_file }}"
         content: |
           {{ aws_access_key_id }}:{{ aws_secret_access_key }}
         mode: "0600"
 
     - name: Add entry to /etc/fstab
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/fstab
         line: "{{ s3_bucket_name }} {{ mount_point }} fuse.s3fs _netdev,allow_other,use_path_request_style,url={{ s3_endpoint }} 0 0"
         state: present
 
     - name: Mount the S3 bucket
-      command: mount -a
+      ansible.builtin.command: mount -a

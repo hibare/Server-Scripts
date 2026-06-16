@@ -10,7 +10,7 @@
 
   tasks:
     - name: Check if Docker is installed
-      command: docker --version
+      ansible.builtin.command: docker --version
       register: docker_version
       ignore_errors: yes
 
@@ -29,11 +29,11 @@
       when: docker_version.rc == 0
 
     - name: Construct url
-      set_fact:
+      ansible.builtin.set_fact:
         loki_url: "{{ logs_username }}:{{ grafana_cloud_api_key }}@{{ loki_url | regex_replace('^https?://', '') }}"
 
     - name: Update daemon.json
-      import_role:
+      ansible.builtin.import_role:
         name: json_modifier
       vars:
         json_file_path: /etc/docker/daemon.json
