@@ -22,6 +22,13 @@
           - ssh_key_path | length > 0
         fail_msg: "Required environment variables are not set. Check that NEW_USERNAME and SSH_PUB_KEY_PATH are defined."
 
+    - name: Validate new user parameters
+      ansible.builtin.assert:
+        that:
+          - new_username | length > 0
+          - new_user_password | length > 0
+        fail_msg: "Username and password must be provided"
+
     - name: Add new user
       ansible.builtin.user:
         name: "{{ new_username }}"

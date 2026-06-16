@@ -9,6 +9,12 @@
       private: true
 
   tasks:
+    - name: Validate Tailscale authkey
+      ansible.builtin.assert:
+        that:
+          - tailscale_authkey | length > 0
+        fail_msg: "Tailscale authkey must be provided"
+
     - name: Download Tailscale convenience script
       ansible.builtin.get_url:
         url: https://tailscale.com/install.sh
@@ -48,4 +54,3 @@
   handlers:
     - name: Reload sysctl
       ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf
-

@@ -1,6 +1,6 @@
 ---
 - name: Uninstall S3 bucket mount
-  hosts: in-oci-04
+  hosts: media
   become: true
   vars:
     s3_bucket_name: "{{ lookup('env', 'S3_MEDIA_BUCKET') | default('') }}"

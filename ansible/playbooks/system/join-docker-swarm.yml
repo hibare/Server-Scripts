@@ -13,6 +13,13 @@
       private: false
 
   tasks:
+    - name: Validate swarm join parameters
+      ansible.builtin.assert:
+        that:
+          - swarm_token | length > 0
+          - swam_manager_ip | length > 0
+        fail_msg: "Swarm token and manager IP must be provided"
+
     - name: Install UFW
       ansible.builtin.apt:
         name: ufw
@@ -49,4 +56,3 @@
 
     - name: Join Swarm as Worker
       ansible.builtin.command: "docker swarm join --token {{ swarm_token }} {{ swam_manager_ip }}:2377"
-
