@@ -37,3 +37,4 @@
 
     - name: Mount the S3 bucket
       ansible.builtin.command: mount -a
+

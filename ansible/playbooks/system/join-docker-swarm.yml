@@ -49,3 +49,4 @@
 
     - name: Join Swarm as Worker
       ansible.builtin.command: "docker swarm join --token {{ swarm_token }} {{ swam_manager_ip }}:2377"
+

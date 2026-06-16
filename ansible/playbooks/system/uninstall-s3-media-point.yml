@@ -33,3 +33,4 @@
       ansible.builtin.package:
         name: s3fs
         state: absent
+

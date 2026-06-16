@@ -5,3 +5,4 @@
   tasks:
     - name: Run K3s Crictl Prune
       ansible.builtin.command: sudo k3s crictl rmi --prune
+

@@ -37,3 +37,4 @@
         line: "{{ swap_file_path }} none swap sw 0 0"
         state: present
       when: swap_file_created.changed
+

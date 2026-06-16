@@ -64,3 +64,4 @@
     - name: Reboot the system to apply changes
       ansible.builtin.reboot:
         reboot_timeout: 300
+

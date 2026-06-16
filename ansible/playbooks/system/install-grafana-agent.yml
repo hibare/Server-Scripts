@@ -60,3 +60,4 @@
 
     - name: Permit Grafana Agent to read logs
       ansible.builtin.shell: setfacl -m u:grafana-agent:r /var/log/*log
+

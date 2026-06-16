@@ -36,3 +36,4 @@
         job: "{{ cron_job }}"
         user: "root"
         state: present
+

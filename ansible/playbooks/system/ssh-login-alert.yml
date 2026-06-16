@@ -19,3 +19,4 @@
         dest: "{{ script_dest }}"
         mode: '0755'
       when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int
+

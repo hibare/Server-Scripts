@@ -36,3 +36,4 @@
       ansible.builtin.service:
         name: grafana-agent
         enabled: false
+

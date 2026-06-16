@@ -37,3 +37,4 @@
         dest: /etc/sudoers
         insertafter: EOF
         line: "{{ new_username }} ALL=(ALL) NOPASSWD:ALL"
+

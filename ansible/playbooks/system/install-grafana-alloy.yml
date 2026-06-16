@@ -121,3 +121,4 @@
               targets    = discovery.relabel.integrations_cadvisor.output
               forward_to = [prometheus.remote_write.metrics_integrations.receiver]
           }
+

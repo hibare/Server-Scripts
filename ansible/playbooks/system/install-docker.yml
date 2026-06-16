@@ -38,8 +38,8 @@
 
     - name: Remove docker_gwbridge network if it exists
       ansible.builtin.command: docker network rm docker_gwbridge
-      ignore_errors: true
       register: result
+      ignore_errors: true
 
     - name: Check if network removal was successful or network did not exist
       ansible.builtin.assert:
@@ -54,3 +54,4 @@
         --opt com.docker.network.bridge.enable_ip_masquerade=true
         --opt com.docker.network.bridge.name=docker_gwbridge
         docker_gwbridge
+
