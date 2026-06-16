@@ -4,12 +4,22 @@
   become: true
 
   vars:
-    grafana_cloud_api_key: "{{ lookup('env', 'GRAFANA_CLOUD_API_KEY')}}"
-    metrics_username: "{{ lookup('env', 'GRAFANA_METRIC_USERNAME')}}" # Example - 825019
-    logs_username: "{{ lookup('env', 'GRAFANA_LOG_USERNAME')}}" # Example - 411478
-    prometheus_url: "{{ lookup('env', 'GRAFANA_PROM_URL')}}"
-    loki_url: "{{ lookup('env', 'GRAFANA_LOKI_URL')}}"
+    grafana_cloud_api_key: "{{ lookup('env', 'GRAFANA_CLOUD_API_KEY') | default('')}}"
+    metrics_username: "{{ lookup('env', 'GRAFANA_METRIC_USERNAME') | default('')}}" # Example - 825019
+    logs_username: "{{ lookup('env', 'GRAFANA_LOG_USERNAME') | default('')}}" # Example - 411478
+    prometheus_url: "{{ lookup('env', 'GRAFANA_PROM_URL') | default('')}}"
+    loki_url: "{{ lookup('env', 'GRAFANA_LOKI_URL') | default('')}}"
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - grafana_cloud_api_key | length > 0
+          - metrics_username | length > 0
+          - logs_username | length > 0
+          - prometheus_url | length > 0
+          - loki_url | length > 0
+        fail_msg: "Required environment variables are not set. Check that GRAFANA_CLOUD_API_KEY, GRAFANA_METRIC_USERNAME, GRAFANA_LOG_USERNAME, GRAFANA_PROM_URL, and GRAFANA_LOKI_URL are defined."
+
     - name: Install Grafana Agent
       ansible.builtin.include_role:
         name: grafana.grafana.grafana_agent
@@ -60,4 +70,3 @@
 
     - name: Permit Grafana Agent to read logs
       ansible.builtin.shell: setfacl -m u:grafana-agent:r /var/log/*log
-

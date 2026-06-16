@@ -4,10 +4,15 @@
   become: true
 
   vars:
-    timezone: "{{ lookup('env', 'TIMEZONE') }}"
+    timezone: "{{ lookup('env', 'TIMEZONE') | default('') }}"
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - timezone | length > 0
+        fail_msg: "Required environment variable is not set. Check that TIMEZONE is defined."
+
     - name: Set timezone
       ansible.builtin.timezone:
         name: "{{ timezone }}"
-

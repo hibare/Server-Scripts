@@ -9,12 +9,19 @@
       private: true  # Ensures the input is not echoed to the terminal
 
   vars:
-    new_username: "{{ lookup('env', 'NEW_USERNAME') }}"
-    ssh_key_path: "{{ lookup('env', 'SSH_PUB_KEY_PATH') }}"
+    new_username: "{{ lookup('env', 'NEW_USERNAME') | default('') }}"
+    ssh_key_path: "{{ lookup('env', 'SSH_PUB_KEY_PATH') | default('') }}"
     hashed_password: "{{ new_user_password | password_hash('sha512') }}"
     user_shell: "/bin/bash"
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - new_username | length > 0
+          - ssh_key_path | length > 0
+        fail_msg: "Required environment variables are not set. Check that NEW_USERNAME and SSH_PUB_KEY_PATH are defined."
+
     - name: Add new user
       ansible.builtin.user:
         name: "{{ new_username }}"
@@ -37,4 +44,3 @@
         dest: /etc/sudoers
         insertafter: EOF
         line: "{{ new_username }} ALL=(ALL) NOPASSWD:ALL"
-

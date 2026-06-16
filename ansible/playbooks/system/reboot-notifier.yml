@@ -4,13 +4,20 @@
   become: true
 
   vars:
-    script_url: "{{ lookup('env', 'REBOOT_NOTIFIER_SCRIPT_SOURCE') }}"
-    script_dest: "{{ lookup('env', 'SCRIPTS_DESTINATION') }}"
+    script_url: "{{ lookup('env', 'REBOOT_NOTIFIER_SCRIPT_SOURCE') | default('') }}"
+    script_dest: "{{ lookup('env', 'SCRIPTS_DESTINATION') | default('') }}"
     cron_minute: "30"
     cron_hour: "23"
     cron_job: "bash {{ script_dest }}/reboot_notifier.sh"
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - script_url | length > 0
+          - script_dest | length > 0
+        fail_msg: "Required environment variables are not set. Check that REBOOT_NOTIFIER_SCRIPT_SOURCE and SCRIPTS_DESTINATION are defined."
+
     - name: Ensure the destination directory exists
       ansible.builtin.file:
         path: "{{ script_dest }}"
@@ -36,4 +43,3 @@
         job: "{{ cron_job }}"
         user: "root"
         state: present
-
