@@ -1,3 +1,4 @@
+---
 - name: Uninstall Grafana Agent
   hosts: all
   become: true

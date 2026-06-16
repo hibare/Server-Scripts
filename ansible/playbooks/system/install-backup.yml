@@ -1,3 +1,4 @@
+---
 - name: Install Arclift
   hosts: all
   become: true
