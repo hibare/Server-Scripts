@@ -4,11 +4,11 @@
   become: true
 
   vars:
-    grafana_cloud_api_key: '{{ lookup("env", "GRAFANA_CLOUD_API_KEY")}}'
-    metrics_username: '{{ lookup("env", "GRAFANA_METRIC_USERNAME")}}' # Example - 825019
-    logs_username: '{{ lookup("env", "GRAFANA_LOG_USERNAME")}}' # Example - 411478
-    prometheus_url: '{{ lookup("env", "GRAFANA_PROM_URL")}}'
-    loki_url: '{{ lookup("env", "GRAFANA_LOKI_URL")}}'
+    grafana_cloud_api_key: "{{ lookup('env', 'GRAFANA_CLOUD_API_KEY')}}"
+    metrics_username: "{{ lookup('env', 'GRAFANA_METRIC_USERNAME')}}" # Example - 825019
+    logs_username: "{{ lookup('env', 'GRAFANA_LOG_USERNAME')}}" # Example - 411478
+    prometheus_url: "{{ lookup('env', 'GRAFANA_PROM_URL')}}"
+    loki_url: "{{ lookup('env', 'GRAFANA_LOKI_URL')}}"
 
   tasks:
     - name: Install Alloy

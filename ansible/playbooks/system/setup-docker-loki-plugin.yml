@@ -4,9 +4,9 @@
   become: true
 
   vars:
-    grafana_cloud_api_key: '{{ lookup("env", "GRAFANA_CLOUD_API_KEY")}}'
-    logs_username: '{{ lookup("env", "GRAFANA_LOG_USERNAME")}}' # Example - 411478
-    loki_url: '{{ lookup("env", "GRAFANA_LOKI_URL")}}'
+    grafana_cloud_api_key: "{{ lookup('env', 'GRAFANA_CLOUD_API_KEY')}}"
+    logs_username: "{{ lookup('env', 'GRAFANA_LOG_USERNAME')}}" # Example - 411478
+    loki_url: "{{ lookup('env', 'GRAFANA_LOKI_URL')}}"
 
   tasks:
     - name: Check if Docker is installed

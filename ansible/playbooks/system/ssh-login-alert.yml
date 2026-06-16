@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    script_url: '{{ lookup("env", "SSH_LOGIN_ALERT_SCRIPT_SOURCE") }}'
+    script_url: "{{ lookup('env', 'SSH_LOGIN_ALERT_SCRIPT_SOURCE') }}"
     script_dest: /etc/profile.d
 
   tasks:

@@ -18,7 +18,7 @@
       ansible.builtin.command: sh /tmp/get-tailscale.sh
 
     - name: Run Tailscale up with authkey
-      ansible.builtin.command: tailscale up --authkey {{ tailscale_authkey }} --ssh
+      ansible.builtin.command: "tailscale up --authkey {{ tailscale_authkey }} --ssh"
 
     - name: Create 99-tailscale.conf file
       ansible.builtin.file:

@@ -9,9 +9,9 @@
       private: true  # Ensures the input is not echoed to the terminal
 
   vars:
-    new_username: '{{ lookup("env", "NEW_USERNAME") }}'
-    ssh_key_path: '{{ lookup("env", "SSH_PUB_KEY_PATH") }}'
-    hashed_password: '{{ new_user_password | password_hash("sha512") }}'
+    new_username: "{{ lookup('env', 'NEW_USERNAME') }}"
+    ssh_key_path: "{{ lookup('env', 'SSH_PUB_KEY_PATH') }}"
+    hashed_password: "{{ new_user_password | password_hash('sha512') }}"
     user_shell: "/bin/bash"
 
   tasks:

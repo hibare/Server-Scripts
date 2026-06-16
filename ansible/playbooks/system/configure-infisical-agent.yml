@@ -3,12 +3,12 @@
   hosts: all
   become: true
   vars:
-    infisical_client_id: '{{ lookup("env", "INFISICAL_CLIENT_ID")}}'
-    infisical_client_secret: '{{ lookup("env", "INFISICAL_CLIENT_SECRET")}}'
-    project_id: '{{ lookup("env", "INFISICAL_PROJECT_ID")}}'
-    secret_env: '{{ lookup("env", "INFISICAL_SECRET_ENV")}}'
-    secret_path: '{{ lookup("env", "INFISICAL_SECRET_PATH")}}'
-    merge_env_script: '{{ lookup("env", "MERGE_ENV_SCRIPT_SOURCE")}}'
+    infisical_client_id: "{{ lookup('env', 'INFISICAL_CLIENT_ID')}}"
+    infisical_client_secret: "{{ lookup('env', 'INFISICAL_CLIENT_SECRET')}}"
+    project_id: "{{ lookup('env', 'INFISICAL_PROJECT_ID')}}"
+    secret_env: "{{ lookup('env', 'INFISICAL_SECRET_ENV')}}"
+    secret_path: "{{ lookup('env', 'INFISICAL_SECRET_PATH')}}"
+    merge_env_script: "{{ lookup('env', 'MERGE_ENV_SCRIPT_SOURCE')}}"
   tasks:
     - name: Install prerequisites for downloading Infisical
       ansible.builtin.apt:
