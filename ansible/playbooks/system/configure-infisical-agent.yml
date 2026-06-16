@@ -1,7 +1,7 @@
 ---
 - name: Install Infisical
   hosts: all
-  become: yes
+  become: true
   vars:
     infisical_client_id: '{{ lookup("env", "INFISICAL_CLIENT_ID")}}'
     infisical_client_secret: '{{ lookup("env", "INFISICAL_CLIENT_SECRET")}}'
@@ -19,7 +19,7 @@
         - gnupg
         - apt-transport-https
         - ca-certificates
-      become: yes
+      become: true
 
     - name: Download installation script
       ansible.builtin.get_url:
@@ -32,41 +32,41 @@
 
     - name: Update apt cache
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
 
     - name: Install Infisical
       ansible.builtin.apt:
         name: infisical
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Create directory for Infisical auth files
       ansible.builtin.file:
         path: /etc/infisical/auth
         state: directory
         mode: "0755"
-      become: yes
+      become: true
 
     - name: Create client-id file
       ansible.builtin.copy:
         content: "{{ infisical_client_id }}"
         dest: /etc/infisical/auth/client-id
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Create client-secret file
       ansible.builtin.copy:
         content: "{{ infisical_client_secret }}"
         dest: /etc/infisical/auth/client-secret
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Create directory for Infisical auth files
       ansible.builtin.file:
         path: /etc/infisical/templates
         state: directory
         mode: "0755"
-      become: yes
+      become: true
 
     - name: Create dot-env-template file
       ansible.builtin.copy:
@@ -78,14 +78,14 @@
           {{ "{{" }}- end {{ "}}" }}
         dest: /etc/infisical/templates/dot-env-template
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Create directory for post process script
       ansible.builtin.file:
         path: /etc/infisical/post-process
         state: directory
         mode: "0755"
-      become: yes
+      become: true
 
     - name: Copy merge-env script
       ansible.builtin.get_url:
@@ -118,7 +118,7 @@
                   command: python3 /etc/infisical/post-process/merge_env.py --source /etc/infisical/env --destination /etc/environment && reboot
         dest: /etc/infisical/agent-config.yml
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Create Infisical systemd service
       ansible.builtin.copy:
@@ -136,14 +136,14 @@
           WantedBy=multi-user.target
         dest: /etc/systemd/system/infisical.service
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Reload systemd to load the new service unit
       ansible.builtin.systemd:
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Start Infisical service
       ansible.builtin.service:
         name: infisical
         state: restarted
-        enabled: yes
+        enabled: true

@@ -1,7 +1,7 @@
 ---
 - name: Setup reboot notifier
   hosts: all
-  become: yes
+  become: true
 
   vars:
     script_url: '{{ lookup("env", "REBOOT_NOTIFIER_SCRIPT_SOURCE") }}'

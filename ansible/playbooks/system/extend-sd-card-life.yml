@@ -1,11 +1,11 @@
 ---
 - name: Extend Raspberry Pi SD Card Life
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Disable swap
       ansible.builtin.command: dphys-swapfile swapoff
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Remove swap file
       ansible.builtin.file:
@@ -15,7 +15,7 @@
     - name: Disable swap service
       ansible.builtin.systemd:
         name: dphys-swapfile
-        enabled: no
+        enabled: false
         state: stopped
 
     - name: Check if /etc/rsyslog.conf exists

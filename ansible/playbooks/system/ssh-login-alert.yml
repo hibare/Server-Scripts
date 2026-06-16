@@ -1,7 +1,7 @@
 ---
 - name: Copy SSH login notifier
   hosts: all
-  become: yes
+  become: true
 
   vars:
     script_url: '{{ lookup("env", "SSH_LOGIN_ALERT_SCRIPT_SOURCE") }}'

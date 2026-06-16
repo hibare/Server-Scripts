@@ -10,7 +10,7 @@
 
     - name: Update package list
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         cache_valid_time: 3600
 
     - name: Ensure /etc/arclift exists
@@ -33,5 +33,5 @@
     - name: Enable and restart Arclift service
       ansible.builtin.systemd:
         name: arclift
-        enabled: yes
+        enabled: true
         state: restarted

@@ -6,11 +6,11 @@
   vars_prompt:
     - name: swarm_token
       prompt: "Enter Docker swarm worker join token"
-      private: yes
+      private: true
 
     - name: swam_manager_ip
       prompt: "Enter Docker swarm manager IP"
-      private: no
+      private: false
 
   tasks:
     - name: Install UFW

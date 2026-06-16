@@ -12,7 +12,7 @@
     - name: Check if Docker is installed
       ansible.builtin.command: docker --version
       register: docker_version
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Install Grafana Loki Docker plugin
       community.docker.docker_plugin:

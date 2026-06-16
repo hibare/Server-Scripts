@@ -1,7 +1,7 @@
 ---
 - name: Push environment variables
   hosts: all
-  become: yes
+  become: true
 
   vars:
     env_file: "config/server.env"

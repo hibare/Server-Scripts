@@ -6,7 +6,7 @@
   vars_prompt:
     - name: new_user_password
       prompt: "Enter the password for the new user"
-      private: yes  # Ensures the input is not echoed to the terminal
+      private: true  # Ensures the input is not echoed to the terminal
 
   vars:
     new_username: '{{ lookup("env", "NEW_USERNAME") }}'
@@ -25,7 +25,7 @@
       ansible.builtin.user:
         name: "{{ new_username }}"
         groups: sudo
-        append: yes
+        append: true
 
     - name: Copy SSH key
       ansible.builtin.authorized_key:

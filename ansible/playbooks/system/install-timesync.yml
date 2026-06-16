@@ -16,5 +16,5 @@
     - name: Enable and start time synchronization service
       ansible.builtin.systemd:
         name: "{{ 'systemd-timesyncd' if ('Ubuntu' in distribution_info.stdout) else 'chrony' }}"
-        enabled: yes
+        enabled: true
         state: started

@@ -16,7 +16,7 @@
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         groups: docker
-        append: yes
+        append: true
 
     - name: Update daemon.json
       ansible.builtin.import_role:
@@ -38,7 +38,7 @@
 
     - name: Remove docker_gwbridge network if it exists
       ansible.builtin.command: docker network rm docker_gwbridge
-      ignore_errors: yes
+      ignore_errors: true
       register: result
 
     - name: Check if network removal was successful or network did not exist

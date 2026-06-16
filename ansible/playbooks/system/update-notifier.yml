@@ -1,7 +1,7 @@
 ---
 - name: Setup update notifier
   hosts: all
-  become: yes
+  become: true
 
   vars:
     script_url: '{{ lookup("env", "UPDATE_NOTIFIER_SCRIPT_SOURCE") }}'

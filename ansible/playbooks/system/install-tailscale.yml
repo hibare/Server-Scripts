@@ -6,7 +6,7 @@
   vars_prompt:
     - name: tailscale_authkey
       prompt: "Enter the Tailscale authkey"
-      private: yes
+      private: true
 
   tasks:
     - name: Download Tailscale convenience script

@@ -6,7 +6,7 @@
   vars_prompt:
     - name: swap_file_size_mb
       prompt: "Enter the size of the swap file in megabytes"
-      private: no  # Setting to yes hides the input (useful for sensitive information)
+      private: false  # Setting to yes hides the input (useful for sensitive information)
 
   tasks:
     - name: Define variables
