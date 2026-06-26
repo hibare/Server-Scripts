@@ -44,3 +44,18 @@ updates:
       terraform:
         patterns:
           - "*"
+
+    # Maintain dependencies for pre-commit
+    - package-ecosystem: "pre-commit"
+      directory: "/"
+      schedule:
+          interval: "monthly"
+          day: "friday"
+          time: "00:30"
+      target-branch: "master"
+      assignees:
+          - "hibare"
+      groups:
+          pre-commit:
+              patterns:
+                  - "*"
