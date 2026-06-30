@@ -31,24 +31,39 @@
 
     - name: Allow TCP traffic on port 2377 from 100.64.0.0/10 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 proto tcp to any port 2377
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
     - name: Allow TCP traffic on port 7946 from 100.64.0.0/10 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 to any port 7946
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
     - name: Allow UDP traffic on port 4789 from 100.64.0.0/10 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 proto udp to any port 4789
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
     - name: Allow TCP traffic on port 2377 from fd7a:115c:a1e0:ab12::/64 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto tcp to any port 2377
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
     - name: Allow TCP traffic on port 7946 from fd7a:115c:a1e0:ab12::/64 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 to any port 7946
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
     - name: Allow UDP traffic on port 4789 from fd7a:115c:a1e0:ab12::/64 on tailscale0
       ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto udp to any port 4789
+      register: ufw_result
+      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
 
-    - name: Allow on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0
+    - name: Allow all inbound traffic on tailscale0
+      community.general.ufw:
+        rule: allow
+        interface: tailscale0
+        direction: in
 
     - name: Reload UFW
       community.general.ufw:
