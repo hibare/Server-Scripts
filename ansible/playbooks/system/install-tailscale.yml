@@ -44,13 +44,6 @@
         line: "net.ipv6.conf.all.forwarding = 1"
       notify: Reload sysctl
 
-    - name: Reload sysctl
-      ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf
-      async: 0
-      poll: 0
-      become: true
-      ignore_errors: true
-
   handlers:
     - name: Reload sysctl
       ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf

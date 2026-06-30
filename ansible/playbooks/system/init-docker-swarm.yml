@@ -19,10 +19,6 @@
       ansible.builtin.set_fact:
         tailscale_ip: "{{ tailscale_ip_output.stdout }}"
 
-    - name: Print the Tailscale IPv4 Address
-      ansible.builtin.debug:
-        msg: "The Tailscale IPv4 Address is: {{ tailscale_ip }}"
-
     - name: Initialize Docker Swarm using Tailscale IP
       community.docker.docker_swarm:
         state: present
