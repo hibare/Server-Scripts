@@ -3,6 +3,11 @@
   hosts: all
 
   tasks:
-    - name: Run Docker System Prune
-      ansible.builtin.command: docker system prune --all -f
+    - name: Prune Docker system
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
 
