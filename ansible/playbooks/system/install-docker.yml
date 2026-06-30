@@ -11,6 +11,8 @@
 
     - name: Run Docker convenience script
       ansible.builtin.command: sh /tmp/get-docker.sh
+      args:
+        creates: /usr/bin/docker
 
     - name: Add current user to the Docker group
       ansible.builtin.user:

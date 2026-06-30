@@ -19,6 +19,7 @@
       poll: 0     # Don't wait for completion
       delegate_to: "{{ inventory_hostname }}"
       register: script_result
+      changed_when: true
 
     - name: Wait for the script to complete
       ansible.builtin.async_status:
