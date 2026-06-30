@@ -68,5 +68,17 @@
         grafana_agent_env_vars:
           HOSTNAME: "%H"
 
+    - name: Find log files
+      ansible.builtin.find:
+        paths: /var/log
+        patterns: "*log"
+      register: log_files
+
     - name: Permit Grafana Agent to read logs
-      ansible.builtin.shell: setfacl -m u:grafana-agent:r /var/log/*log
+      ansible.posix.acl:
+        path: "{{ item.path }}"
+        entity: grafana-agent
+        etype: user
+        permissions: r
+        state: present
+      loop: "{{ log_files.files }}"

@@ -32,4 +32,3 @@
     - name: Display the script output
       ansible.builtin.debug:
         var: job_result.stdout_lines
-

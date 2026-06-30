@@ -18,4 +18,3 @@
         name: "{{ 'systemd-timesyncd' if ('Ubuntu' in distribution_info.stdout) else 'chrony' }}"
         enabled: true
         state: started
-

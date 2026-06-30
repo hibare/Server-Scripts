@@ -23,10 +23,15 @@
     - name: Run Tailscale convenience script
       ansible.builtin.command: sh /tmp/get-tailscale.sh
 
+    - name: Check Tailscale status
+      ansible.builtin.command: tailscale status
+      register: tailscale_status
+      failed_when: false
+      changed_when: false
+
     - name: Run Tailscale up with authkey
       ansible.builtin.command: "tailscale up --authkey {{ tailscale_authkey }} --ssh"
-      args:
-        creates: /var/lib/tailscale/tailscaled.state
+      when: "'Logged out' in tailscale_status.stdout or tailscale_status.rc != 0"
 
     - name: Create 99-tailscale.conf file
       ansible.builtin.file:

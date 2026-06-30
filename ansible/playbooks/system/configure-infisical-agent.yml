@@ -30,7 +30,7 @@
         - gnupg
         - apt-transport-https
         - ca-certificates
-      become: true
+
 
     - name: Download installation script
       ansible.builtin.get_url:
@@ -56,28 +56,24 @@
         path: /etc/infisical/auth
         state: directory
         mode: "0700"
-      become: true
 
     - name: Create client-id file
       ansible.builtin.copy:
         content: "{{ infisical_client_id }}"
         dest: /etc/infisical/auth/client-id
         mode: "0600"
-      become: true
 
     - name: Create client-secret file
       ansible.builtin.copy:
         content: "{{ infisical_client_secret }}"
         dest: /etc/infisical/auth/client-secret
         mode: "0600"
-      become: true
 
-    - name: Create directory for Infisical auth files
+    - name: Create directory for Infisical templates
       ansible.builtin.file:
         path: /etc/infisical/templates
         state: directory
         mode: "0755"
-      become: true
 
     - name: Create dot-env-template file
       ansible.builtin.copy:
@@ -89,14 +85,12 @@
           {{ "{{" }}- end {{ "}}" }}
         dest: /etc/infisical/templates/dot-env-template
         mode: "0644"
-      become: true
 
     - name: Create directory for post process script
       ansible.builtin.file:
         path: /etc/infisical/post-process
         state: directory
         mode: "0755"
-      become: true
 
     - name: Copy merge-env script
       ansible.builtin.get_url:
@@ -129,7 +123,6 @@
                   command: python3 /etc/infisical/post-process/merge_env.py --source /etc/infisical/env --destination /etc/environment && reboot
         dest: /etc/infisical/agent-config.yml
         mode: "0644"
-      become: true
 
     - name: Create Infisical systemd service
       ansible.builtin.copy:
@@ -147,7 +140,6 @@
           WantedBy=multi-user.target
         dest: /etc/systemd/system/infisical.service
         mode: "0644"
-      become: true
 
     - name: Reload systemd to load the new service unit
       ansible.builtin.systemd:

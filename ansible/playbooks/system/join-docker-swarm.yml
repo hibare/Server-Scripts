@@ -8,7 +8,7 @@
       prompt: "Enter Docker swarm worker join token"
       private: true
 
-    - name: swam_manager_ip
+    - name: swarm_manager_ip
       prompt: "Enter Docker swarm manager IP"
       private: false
 
@@ -17,7 +17,7 @@
       ansible.builtin.assert:
         that:
           - swarm_token | length > 0
-          - swam_manager_ip | length > 0
+          - swarm_manager_ip | length > 0
         fail_msg: "Swarm token and manager IP must be provided"
 
     - name: Install UFW
@@ -30,34 +30,56 @@
         state: enabled
 
     - name: Allow TCP traffic on port 2377 from 100.64.0.0/10 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 proto tcp to any port 2377
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: 100.64.0.0/10
+        proto: tcp
+        to_port: "2377"
 
     - name: Allow TCP traffic on port 7946 from 100.64.0.0/10 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 to any port 7946
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: 100.64.0.0/10
+        to_port: "7946"
 
     - name: Allow UDP traffic on port 4789 from 100.64.0.0/10 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from 100.64.0.0/10 proto udp to any port 4789
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: 100.64.0.0/10
+        proto: udp
+        to_port: "4789"
 
     - name: Allow TCP traffic on port 2377 from fd7a:115c:a1e0:ab12::/64 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto tcp to any port 2377
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: "fd7a:115c:a1e0:ab12::/64"
+        proto: tcp
+        to_port: "2377"
 
     - name: Allow TCP traffic on port 7946 from fd7a:115c:a1e0:ab12::/64 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 to any port 7946
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: "fd7a:115c:a1e0:ab12::/64"
+        to_port: "7946"
 
     - name: Allow UDP traffic on port 4789 from fd7a:115c:a1e0:ab12::/64 on tailscale0
-      ansible.builtin.command: ufw allow in on tailscale0 from fd7a:115c:a1e0:ab12::/64 proto udp to any port 4789
-      register: ufw_result
-      changed_when: "'Skipping' not in ufw_result.stdout and 'Skipping' not in ufw_result.stderr"
+      community.general.ufw:
+        rule: allow
+        direction: in
+        interface: tailscale0
+        from_ip: "fd7a:115c:a1e0:ab12::/64"
+        proto: udp
+        to_port: "4789"
 
     - name: Allow all inbound traffic on tailscale0
       community.general.ufw:
@@ -74,4 +96,4 @@
         state: join
         join_token: "{{ swarm_token }}"
         remote_addrs:
-          - "{{ swam_manager_ip }}:2377"
+          - "{{ swarm_manager_ip }}:2377"

@@ -31,7 +31,7 @@
         state: present
         advertise_addr: "{{ tailscale_ip }}"
         data_path_addr: "{{ tailscale_ip }}"
-        force_new_cluster: true
+
 
     - name: Remove existing Docker networks if any
       community.docker.docker_network:
@@ -51,6 +51,7 @@
         driver_options:
           com.docker.network.driver.mtu: "{{ mtu }}"
         scope: swarm
+        ingress: true
         internal: false
 
     - name: Create custom secure network

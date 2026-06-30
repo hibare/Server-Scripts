@@ -39,16 +39,15 @@
         state: restarted
 
     - name: Remove docker_gwbridge network if it exists
-      ansible.builtin.command: docker network rm docker_gwbridge
-      register: result
-      failed_when:
-        - result.rc != 0
-        - '"network docker_gwbridge not found" not in result.stderr'
+      community.docker.docker_network:
+        name: docker_gwbridge
+        state: absent
 
     - name: Create docker_gwbridge network with specified options
-      ansible.builtin.shell: >
-        docker network create --driver bridge
-        --opt com.docker.network.driver.mtu=1280
-        --opt com.docker.network.bridge.enable_ip_masquerade=true
-        --opt com.docker.network.bridge.name=docker_gwbridge
-        docker_gwbridge
+      community.docker.docker_network:
+        name: docker_gwbridge
+        driver: bridge
+        driver_options:
+          com.docker.network.driver.mtu: "1280"
+          com.docker.network.bridge.enable_ip_masquerade: "true"
+          com.docker.network.bridge.name: docker_gwbridge

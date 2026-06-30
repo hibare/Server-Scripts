@@ -27,8 +27,9 @@
       register: swap_file_created
 
     - name: Set permissions for swap file
-      ansible.builtin.command: "chmod 600 {{ swap_file_path }}"
-      when: swap_file_created.changed
+      ansible.builtin.file:
+        path: "{{ swap_file_path }}"
+        mode: "0600"
 
     - name: Set up swap space
       ansible.builtin.command: "mkswap {{ swap_file_path }}"
