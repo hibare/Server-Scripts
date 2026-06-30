@@ -18,23 +18,29 @@
         fail_msg: "Required environment variables are not set. Check that GRAFANA_CLOUD_API_KEY, GRAFANA_LOG_USERNAME, and GRAFANA_LOKI_URL are defined."
 
     - name: Check if Docker is installed
-      ansible.builtin.command: docker --version
-      register: docker_version
-      ignore_errors: true
+      ansible.builtin.stat:
+        path: /usr/bin/docker
+      register: docker_check
+
+    - name: Assert Docker is installed
+      ansible.builtin.assert:
+        that:
+          - docker_check.stat.exists
+        fail_msg: "Docker is not installed. Install Docker before running this playbook."
 
     - name: Install Grafana Loki Docker plugin
       community.docker.docker_plugin:
         plugin_name: grafana/loki-docker-driver
         state: present
         alias: loki
-      when: docker_version.rc == 0
+      when: docker_check.stat.exists
 
     - name: Enable Grafana Loki Docker plugin
       community.docker.docker_plugin:
         plugin_name: grafana/loki-docker-driver
         state: enable
         alias: loki
-      when: docker_version.rc == 0
+      when: docker_check.stat.exists
 
     - name: Construct url
       ansible.builtin.set_fact:
