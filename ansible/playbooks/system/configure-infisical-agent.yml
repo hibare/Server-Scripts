@@ -55,21 +55,21 @@
       ansible.builtin.file:
         path: /etc/infisical/auth
         state: directory
-        mode: "0755"
+        mode: "0700"
       become: true
 
     - name: Create client-id file
       ansible.builtin.copy:
         content: "{{ infisical_client_id }}"
         dest: /etc/infisical/auth/client-id
-        mode: "0644"
+        mode: "0600"
       become: true
 
     - name: Create client-secret file
       ansible.builtin.copy:
         content: "{{ infisical_client_secret }}"
         dest: /etc/infisical/auth/client-secret
-        mode: "0644"
+        mode: "0600"
       become: true
 
     - name: Create directory for Infisical auth files
