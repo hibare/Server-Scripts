@@ -36,7 +36,7 @@ INVENTORY_FILE ?= inventory.ini
 .PHONY: init
 init: ## Initialize the environment
 	@echo -e "\n$(BLUE) [!] Checking required tools...$(NC)"
-	@for cmd in pre-commit sshpass infisical poetry tofu; do \
+	@for cmd in pre-commit sshpass infisical uv tofu; do \
 		if ! command -v $$cmd >/dev/null 2>&1; then \
 			echo -e "\n$(RED)Error: $$cmd is not installed. Please install it manually.$(NC)"; \
 			exit 1; \
@@ -47,17 +47,17 @@ init: ## Initialize the environment
 	@$(INFISICAL_CMD) init
 
 	@echo -e "\n$(BLUE) [!] Installing Python packages...$(NC)"
-	@poetry install
+	@uv sync
 
 	@echo -e "\n$(BLUE) [!] Installing ansible galaxy modules...$(NC)"
-	@poetry run ansible-galaxy collection install -r ansible/galaxy-requirements.yml --force >/dev/null
+	@uv run ansible-galaxy collection install -r ansible/galaxy-requirements.yml --force >/dev/null
 
 
 define run_ansible_playbook
 	echo -e "\n$(BLUE) [!] Running playbook...$(NC) \n"; \
 	cd ansible; \
 	echo -e "\n$(YELLOW) [!] Using inventory file $(RED)$(INVENTORY_FILE)...$(NC) \n"; \
-	$(INFISICAL_RUN_CMD) -- poetry run ansible-playbook $(1) -i $(INVENTORY_FILE);
+	$(INFISICAL_RUN_CMD) -- uv run ansible-playbook $(1) -i $(INVENTORY_FILE);
 endef
 
 .PHONY: ansible-system-update
