@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Check if the system requires a reboot
 if [ -f /var/run/reboot-required ]; then

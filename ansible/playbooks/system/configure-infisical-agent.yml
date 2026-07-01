@@ -120,7 +120,7 @@
                 polling-interval: 60s
                 execute:
                   timeout: 30
-                  command: python3 /etc/infisical/post-process/merge_env.py --source /etc/infisical/env --destination /etc/environment && reboot
+                  command: python3 /etc/infisical/post-process/merge_env.py --source /etc/infisical/env --destination /etc/environment
         dest: /etc/infisical/agent-config.yml
         mode: "0644"
 

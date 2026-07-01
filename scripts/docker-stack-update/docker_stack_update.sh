@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Define the directory where your Docker Compose stacks are located
 DOCKER_DIR="$HOME/docker"
@@ -33,6 +34,11 @@ shift $((OPTIND -1))
 
 # Get a list of running stack names
 running_stacks=$(docker stack ls --format '{{.Name}}' 2>/dev/null)
+
+if ! compgen -G "$DOCKER_DIR"/*/ >/dev/null 2>&1; then
+    echo "⚠️ No stack directories found in $DOCKER_DIR"
+    exit 0
+fi
 
 # List all subdirectories in the Docker directory
 for stack_dir in "$DOCKER_DIR"/*/; do
