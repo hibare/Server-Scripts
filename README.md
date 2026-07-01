@@ -22,6 +22,7 @@ Ensure the following tools are installed on your control node:
 - **Infisical CLI** (Secret management)
 - **OpenTofu** (IaC)
 - **pre-commit** (Pre-commit hooks)
+- **Docker** (Required for containerized pre-commit hooks like TFLint and TruffleHog)
 - **sshpass** (For Ansible SSH password auth)
 
 ## Quick Start

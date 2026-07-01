@@ -45,7 +45,7 @@ repos:
       - id: tflint
         name: TFLint (Docker)
         description: Linter for Terraform config.
-        entry: docker run --rm -v "./:/data" -t ghcr.io/terraform-linters/tflint --recursive
+        entry: docker run --rm -v "./:/data" ghcr.io/terraform-linters/tflint:v0.53.0 --recursive
         language: system
         files: \.tf$
         pass_filenames: false
