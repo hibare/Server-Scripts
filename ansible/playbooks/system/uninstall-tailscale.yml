@@ -1,30 +1,30 @@
 ---
 - name: Uninstall Tailscale
   hosts: all
-  become: yes
+  become: true
 
   tasks:
     - name: Logout from Tailscale
-      shell: tailscale logout
-      ignore_errors: yes
+      ansible.builtin.shell: tailscale logout
+      ignore_errors: true
 
     - name: Stop Tailscale service
-      systemd:
+      ansible.builtin.systemd:
         name: tailscaled
         state: stopped
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Remove Tailscale package
-      apt:
+      ansible.builtin.apt:
         name: tailscale
         state: absent
 
     - name: Remove Tailscale directories and files
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop:
         - /etc/apt/sources.list.d/tailscale.list
         - /etc/sysctl.d/99-tailscale.conf
-      ignore_errors: yes
+      ignore_errors: true
       changed_when: true

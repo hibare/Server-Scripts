@@ -1,35 +1,36 @@
 ---
 - name: Setup update notifier
   hosts: all
-  become: yes
+  become: true
 
   vars:
-    script_url: '{{ lookup("env", "UPDATE_NOTIFIER_SCRIPT_SOURCE") }}'
-    script_dest: '{{ lookup("env", "SCRIPTS_DESTINATION") }}'
+    script_url: "{{ lookup('env', 'UPDATE_NOTIFIER_SCRIPT_SOURCE') | default('') }}"
+    script_dest: "{{ lookup('env', 'SCRIPTS_DESTINATION') | default('') }}"
     cron_minute: "30"
     cron_hour: "23"
     cron_job: "bash {{ script_dest }}/update_notifier.sh"
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - script_url | length > 0
+          - script_dest | length > 0
+        fail_msg: "Required environment variables are not set. Check that UPDATE_NOTIFIER_SCRIPT_SOURCE and SCRIPTS_DESTINATION are defined."
+
     - name: Ensure the destination directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ script_dest }}"
         state: directory
 
-    - name: Check if the script is present
-      stat:
-        path: "{{ script_dest }}/update_notifier.sh"
-      register: script_stat
-
     - name: Load script if not present or updated
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ script_url }}"
-        dest: "{{ script_dest }}"
+        dest: "{{ script_dest }}/update_notifier.sh"
         mode: '0755'
-      when: script_stat.stat.exists == false or script_stat.stat.mtime < ansible_date_time.epoch | int
 
     - name: Add a cronjob to run the script
-      cron:
+      ansible.builtin.cron:
         name: "Run the script every day"
         minute: "{{ cron_minute }}"
         hour: "{{ cron_hour }}"

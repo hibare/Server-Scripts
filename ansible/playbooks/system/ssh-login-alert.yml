@@ -1,20 +1,26 @@
 ---
 - name: Copy SSH login notifier
   hosts: all
-  become: yes
+  become: true
 
   vars:
-    script_url: '{{ lookup("env", "SSH_LOGIN_ALERT_SCRIPT_SOURCE") }}'
+    script_url: "{{ lookup('env', 'SSH_LOGIN_ALERT_SCRIPT_SOURCE') | default('') }}"
     script_dest: /etc/profile.d
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - script_url | length > 0
+        fail_msg: "Required environment variable is not set. Check that SSH_LOGIN_ALERT_SCRIPT_SOURCE is defined."
+
     - name: Check if the script is present
-      stat:
+      ansible.builtin.stat:
         path: "{{ script_dest }}/ssh_login_alert.sh"
       register: script_stat
 
     - name: Load script if not present or updated
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ script_url }}"
         dest: "{{ script_dest }}"
         mode: '0755'

@@ -1,52 +1,52 @@
 ---
 - name: Ensure all required parameters are defined
-  assert:
+  ansible.builtin.assert:
     that:
       - json_file_path != ""
       - modifier in ['add', 'remove']
     fail_msg: "The 'json_file_path' and 'modifier' parameters must be specified. 'modifier' must be either 'add' or 'remove'."
 
 - name: Read the current JSON file content
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ json_file_path }}"
   register: current_json
   failed_when: false
 
 - name: Set default content if JSON file does not exist or is empty
-  set_fact:
+  ansible.builtin.set_fact:
     json_content: {}
   when: current_json.failed or not current_json.content is defined or current_json.content | b64decode | length == 0
 
 - name: Decode JSON content from base64
-  set_fact:
+  ansible.builtin.set_fact:
     json_content: "{{ current_json.content | b64decode | from_json }}"
   when: not current_json.failed and current_json.content is defined
 
 - name: Ensure json_content is a dictionary
-  set_fact:
+  ansible.builtin.set_fact:
     json_content: "{{ json_content | default('{}') | from_json }}"
   when: json_content is string
 
 - name: Add or remove content based on modifier
   block:
     - name: Add content to JSON file
-      set_fact:
+      ansible.builtin.set_fact:
         updated_json_content: "{{ json_content | combine(additional_content, recursive=True) }}"
       when: modifier == 'add'
 
     - name: Remove content from JSON file
-      set_fact:
+      ansible.builtin.set_fact:
         updated_json_content: "{{ json_content | dict2items | selectattr('key', 'search', remove_keys) | items2dict }}"
       when: modifier == 'remove'
 
 - name: Validate JSON content
-  assert:
+  ansible.builtin.assert:
     that:
       - updated_json_content is defined
       - updated_json_content | to_json is defined
     fail_msg: "The updated JSON content must be a dictionary."
 
 - name: Write updated JSON content to file
-  copy:
+  ansible.builtin.copy:
     content: "{{ updated_json_content | to_nice_json }}"
     dest: "{{ json_file_path }}"

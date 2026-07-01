@@ -1,3 +1,4 @@
+---
 - name: Uninstall Grafana Agent
   hosts: all
   become: true
@@ -28,10 +29,10 @@
     # Restart the systemd daemon to apply changes
     - name: Restart systemd daemon
       ansible.builtin.systemd:
-        daemon_reload: yes
+        daemon_reload: true
 
     # Ensure Grafana Agent won't start on boot
     - name: Disable Grafana Agent service on boot
       ansible.builtin.service:
         name: grafana-agent
-        enabled: no
+        enabled: false

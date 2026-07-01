@@ -1,38 +1,53 @@
+---
 - name: Setup Docker loki plugin
   hosts: all
   become: true
 
   vars:
-    grafana_cloud_api_key: '{{ lookup("env", "GRAFANA_CLOUD_API_KEY")}}'
-    logs_username: '{{ lookup("env", "GRAFANA_LOG_USERNAME")}}' # Example - 411478
-    loki_url: '{{ lookup("env", "GRAFANA_LOKI_URL")}}'
+    grafana_cloud_api_key: "{{ lookup('env', 'GRAFANA_CLOUD_API_KEY') | default('')}}"
+    logs_username: "{{ lookup('env', 'GRAFANA_LOG_USERNAME') | default('')}}" # Example - 411478
+    loki_url: "{{ lookup('env', 'GRAFANA_LOKI_URL') | default('')}}"
 
   tasks:
+    - name: Validate required env vars
+      ansible.builtin.assert:
+        that:
+          - grafana_cloud_api_key | length > 0
+          - logs_username | length > 0
+          - loki_url | length > 0
+        fail_msg: "Required environment variables are not set. Check that GRAFANA_CLOUD_API_KEY, GRAFANA_LOG_USERNAME, and GRAFANA_LOKI_URL are defined."
+
     - name: Check if Docker is installed
-      command: docker --version
-      register: docker_version
-      ignore_errors: yes
+      ansible.builtin.stat:
+        path: /usr/bin/docker
+      register: docker_check
+
+    - name: Assert Docker is installed
+      ansible.builtin.assert:
+        that:
+          - docker_check.stat.exists
+        fail_msg: "Docker is not installed. Install Docker before running this playbook."
 
     - name: Install Grafana Loki Docker plugin
       community.docker.docker_plugin:
         plugin_name: grafana/loki-docker-driver
         state: present
         alias: loki
-      when: docker_version.rc == 0
+      when: docker_check.stat.exists
 
     - name: Enable Grafana Loki Docker plugin
       community.docker.docker_plugin:
         plugin_name: grafana/loki-docker-driver
         state: enable
         alias: loki
-      when: docker_version.rc == 0
+      when: docker_check.stat.exists
 
     - name: Construct url
-      set_fact:
+      ansible.builtin.set_fact:
         loki_url: "{{ logs_username }}:{{ grafana_cloud_api_key }}@{{ loki_url | regex_replace('^https?://', '') }}"
 
     - name: Update daemon.json
-      import_role:
+      ansible.builtin.import_role:
         name: json_modifier
       vars:
         json_file_path: /etc/docker/daemon.json

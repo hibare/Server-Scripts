@@ -12,9 +12,15 @@ backend-config.tfvars
 # Inventory files
 *inventory.ini
 
+# Git worktrees
+.worktrees
+
 # Terraform state files
 *.tfstate*
 .terraform
 
 # Infisical files
 .infisical.json
+
+# Backup files
+*.bak
