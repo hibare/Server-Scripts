@@ -18,7 +18,6 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-      - id: terraform_tflint
 
   - repo: https://github.com/psf/black
     rev: 26.5.1
@@ -43,6 +42,13 @@ repos:
         language: system
         stages: ["commit", "push"]
         exclude: (data/|.*/node_modules/|.*venv/|etc/|dist/)
+      - id: tflint
+        name: TFLint (Docker)
+        description: Linter for Terraform config.
+        entry: docker run --rm -v "./:/data" -t ghcr.io/terraform-linters/tflint --recursive
+        language: system
+        files: \.tf$
+        pass_filenames: false
 
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 3.0.0
